@@ -5,31 +5,28 @@
   
   <title>4-7工作学习记录 | 赵阳的blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="上午把系统升级的bug解出来了,发现其实代码中早已经有处理的逻辑了…以后看代码一定要注意边看边画流程图或者作记录,否则效果会很差.
-###下午:
-
-新了解了一个类RemoteCallbackList
-
-处理持有一系列远程接口的任务,最典型的应用就是为执行从Service到客户端的回调.大体上,会跟踪一系列注册的回调,通过它们的潜在的唯一的IBinder对象来识别这些接口.为每一个注册的接口关联一个">
+  <meta name="description" content="上午把系统升级的bug解出来了,发现其实代码中早已经有处理的逻辑了...
+以后看代码一定要注意边看边画流程图或者作记录,否则效果会很差.
+下午:1.   新了解了一个类
+__RemoteCallbackList__
+处理持有一系列远程接口的任务,最典型的应用就是为执行从Service到客户端的回调.大体上,会跟踪一系列注册的回调,通过它们的潜在的唯一的IBinder对象来识别这些接口.为每一个注册">
 <meta property="og:type" content="article">
 <meta property="og:title" content="4-7工作学习记录">
 <meta property="og:url" content="http://blog.zhaoyang.meizu.com/2016/04/07/4-7工作学习记录/index.html">
 <meta property="og:site_name" content="赵阳的blog">
-<meta property="og:description" content="上午把系统升级的bug解出来了,发现其实代码中早已经有处理的逻辑了…以后看代码一定要注意边看边画流程图或者作记录,否则效果会很差.
-###下午:
-
-新了解了一个类RemoteCallbackList
-
-处理持有一系列远程接口的任务,最典型的应用就是为执行从Service到客户端的回调.大体上,会跟踪一系列注册的回调,通过它们的潜在的唯一的IBinder对象来识别这些接口.为每一个注册的接口关联一个">
-<meta property="og:updated_time" content="2016-04-07T13:21:11.520Z">
+<meta property="og:description" content="上午把系统升级的bug解出来了,发现其实代码中早已经有处理的逻辑了...
+以后看代码一定要注意边看边画流程图或者作记录,否则效果会很差.
+下午:1.   新了解了一个类
+__RemoteCallbackList__
+处理持有一系列远程接口的任务,最典型的应用就是为执行从Service到客户端的回调.大体上,会跟踪一系列注册的回调,通过它们的潜在的唯一的IBinder对象来识别这些接口.为每一个注册">
+<meta property="og:updated_time" content="2016-04-10T07:04:49.059Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="4-7工作学习记录">
-<meta name="twitter:description" content="上午把系统升级的bug解出来了,发现其实代码中早已经有处理的逻辑了…以后看代码一定要注意边看边画流程图或者作记录,否则效果会很差.
-###下午:
-
-新了解了一个类RemoteCallbackList
-
-处理持有一系列远程接口的任务,最典型的应用就是为执行从Service到客户端的回调.大体上,会跟踪一系列注册的回调,通过它们的潜在的唯一的IBinder对象来识别这些接口.为每一个注册的接口关联一个">
+<meta name="twitter:description" content="上午把系统升级的bug解出来了,发现其实代码中早已经有处理的逻辑了...
+以后看代码一定要注意边看边画流程图或者作记录,否则效果会很差.
+下午:1.   新了解了一个类
+__RemoteCallbackList__
+处理持有一系列远程接口的任务,最典型的应用就是为执行从Service到客户端的回调.大体上,会跟踪一系列注册的回调,通过它们的潜在的唯一的IBinder对象来识别这些接口.为每一个注册">
   
     <link rel="alternate" href="/atom.xml" title="赵阳的blog" type="application/atom+xml">
   
@@ -104,12 +101,11 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="上午把系统升级的bug解出来了-发现其实代码中早已经有处理的逻辑了…"><a href="#上午把系统升级的bug解出来了-发现其实代码中早已经有处理的逻辑了…" class="headerlink" title="上午把系统升级的bug解出来了,发现其实代码中早已经有处理的逻辑了…"></a>上午把系统升级的bug解出来了,发现其实代码中早已经有处理的逻辑了…</h3><pre><code>以后看代码一定要注意边看边画流程图或者作记录,否则效果会很差.
-</code></pre><p>###下午:</p>
-<ol>
-<li>新了解了一个类<br><strong>RemoteCallbackList</strong></li>
-</ol>
-<p>处理持有一系列远程接口的任务,最典型的应用就是为执行从Service到客户端的回调.<br>大体上,会跟踪一系列注册的回调,通过它们的潜在的唯一的IBinder对象来识别这些接口.为每一个注册的接口关联一个DeathRecipient对象，这样当接口所在的进程结束后接口能被及时清除.<br>执行对接口列表的加锁来处理多线程调用请求,并提供一个线程安全的方法在没有持有锁的情况下反复迭代接口列表的快照.</p>
+        <h3 id="上午"><a href="#上午" class="headerlink" title="上午"></a>上午</h3><pre><code>把系统升级的bug解出来了,发现其实代码中早已经有处理的逻辑了...
+以后看代码一定要注意边看边画流程图或者作记录,否则效果会很差.
+</code></pre><h3 id="下午"><a href="#下午" class="headerlink" title="下午:"></a>下午:</h3><pre><code>1.   新了解了一个类
+__RemoteCallbackList__
+</code></pre><p>处理持有一系列远程接口的任务,最典型的应用就是为执行从Service到客户端的回调.<br>大体上,会跟踪一系列注册的回调,通过它们的潜在的唯一的IBinder对象来识别这些接口.为每一个注册的接口关联一个DeathRecipient对象，这样当接口所在的进程结束后接口能被及时清除.<br>执行对接口列表的加锁来处理多线程调用请求,并提供一个线程安全的方法在没有持有锁的情况下反复迭代接口列表的快照.</p>
 <p>这个类的主要时为了方便多进程中service与客户端的通信.</p>
 <ol>
 <li>对notification有了一些新了解:</li>
@@ -118,8 +114,8 @@
 <li>当设置了onGoing这个选项后通知栏中的通知便不能被用户划掉,只能由系统或者代码来取消.</li>
 <li>可以通过Notification.Builder.addAction(id,title,intent)这个方法来为通知添加额外的点击事件</li>
 </ul>
-<p>###晚上：<br>主要在看aidl,学会了编写aidl的基本流程,明天继续看aidl，并对aidl做一个总结.</p>
-
+<h3 id="晚上："><a href="#晚上：" class="headerlink" title="晚上："></a>晚上：</h3><pre><code>主要在看aidl,学会了编写aidl的基本流程,明天继续看aidl，并对aidl做一个总结.
+</code></pre>
       
     </div>
     <footer class="article-footer">
