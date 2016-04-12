@@ -92,8 +92,10 @@
       
         <h3 id="EventBus学习记录"><a href="#EventBus学习记录" class="headerlink" title="EventBus学习记录"></a>EventBus学习记录</h3><ul>
 <li><h4 id="EventBus的使用的步骤"><a href="#EventBus的使用的步骤" class="headerlink" title="EventBus的使用的步骤"></a>EventBus的使用的步骤</h4><ol>
-<li><p>EventBus在JCenter和Maven Central中都是可用的,所以可以直接在gradle构建文件中进行添加</p>
-<figure class="highlight plain"><figcaption><span>'org.greenrobot:eventbus:3.0.0'```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">	2. 定义一个event类,例如 ==MessageEvent==</span><br><span class="line">	```java</span><br><span class="line">public class MessageEvent &#123;</span><br><span class="line">    public final String message;</span><br><span class="line"></span><br><span class="line">    public MessageEvent(String messa</span><br><span class="line">        this.message = message;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<li><p>EventBus在JCenter和Maven Central中都是可用的,所以可以直接在gradle构建文件中进行添加<code>compile&#39;org.greenrobot:eventbus:3.0.0&#39;</code></p>
+</li>
+<li><p>定义一个event类,例如 <strong>MessageEvent</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MessageEvent</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">final</span> String message;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MessageEvent</span><span class="params">(String messa</span><br><span class="line">        <span class="keyword">this</span>.message = message;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span></span></span><br></pre></td></tr></table></figure>
 </li>
 <li><p>在subscriber（订阅者）中声明处理Event的回调函数:例如处理MessageEvent对象就声明一个<em>onMessageEvent()</em>回调函数,并在函数前面加上<strong>@subscribe</strong>注解.</p>
 </li>
@@ -119,7 +121,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/12/EventBus初探/" data-id="cimx9fu060002h9p9nhdax1y7" class="article-share-link">Share</a>
+      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/12/EventBus初探/" data-id="cimx9j11s0002ltp9nfxty7bt" class="article-share-link">Share</a>
       
       
     </footer>
@@ -169,7 +171,7 @@ __RemoteCallbackList__
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/07/4-7工作学习记录/" data-id="cimx9fu080003h9p9qdcsgwqn" class="article-share-link">Share</a>
+      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/07/4-7工作学习记录/" data-id="cimx9j11u0003ltp99w5t3ljh" class="article-share-link">Share</a>
       
       
     </footer>
@@ -207,7 +209,7 @@ __RemoteCallbackList__
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/06/4-6学习笔记/" data-id="cimx9fu040001h9p9j8p2y4ow" class="article-share-link">Share</a>
+      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/06/4-6学习笔记/" data-id="cimx9j11q0001ltp94d69d89d" class="article-share-link">Share</a>
       
       
     </footer>
@@ -248,7 +250,7 @@ __RemoteCallbackList__
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/05/4-5学习笔记/" data-id="cimx9ftzz0000h9p99eb1oc4c" class="article-share-link">Share</a>
+      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/05/4-5学习笔记/" data-id="cimx9j11m0000ltp9ivcs2qf7" class="article-share-link">Share</a>
       
       
     </footer>
@@ -293,7 +295,7 @@ __RemoteCallbackList__
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/05/hello-world/" data-id="cimx9fu090004h9p9tkailfoz" class="article-share-link">Share</a>
+      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/05/hello-world/" data-id="cimx9j11v0004ltp932erzzx7" class="article-share-link">Share</a>
       
       
     </footer>
