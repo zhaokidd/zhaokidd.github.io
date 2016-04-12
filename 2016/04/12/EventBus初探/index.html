@@ -3,23 +3,23 @@
 <head>
   <meta charset="utf-8">
   
-  <title>赵阳的blog</title>
+  <title>EventBus初探 | 赵阳的blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="EventBus学习记录
 EventBus的使用的步骤
 EventBus在JCenter和Maven Central中都是可用的,所以可以直接在gradle构建文件中进行添加
 &apos;org.greenrobot:eventbus:3.0.0&apos;```12345678910	2. 定义一个event类,例如 ==MessageEvent==	```javapublic class MessageEvent">
 <meta property="og:type" content="article">
-<meta property="og:title" content="赵阳的blog">
-<meta property="og:url" content="http://blog.zhaoyang.meizu.com/2016/04/12/EventBus学习笔记/index.html">
+<meta property="og:title" content="EventBus初探">
+<meta property="og:url" content="http://blog.zhaoyang.meizu.com/2016/04/12/EventBus初探/index.html">
 <meta property="og:site_name" content="赵阳的blog">
 <meta property="og:description" content="EventBus学习记录
 EventBus的使用的步骤
 EventBus在JCenter和Maven Central中都是可用的,所以可以直接在gradle构建文件中进行添加
 &apos;org.greenrobot:eventbus:3.0.0&apos;```12345678910	2. 定义一个event类,例如 ==MessageEvent==	```javapublic class MessageEvent">
-<meta property="og:updated_time" content="2016-04-12T10:00:09.066Z">
+<meta property="og:updated_time" content="2016-04-12T10:02:25.694Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="赵阳的blog">
+<meta name="twitter:title" content="EventBus初探">
 <meta name="twitter:description" content="EventBus学习记录
 EventBus的使用的步骤
 EventBus在JCenter和Maven Central中都是可用的,所以可以直接在gradle构建文件中进行添加
@@ -76,15 +76,25 @@ EventBus在JCenter和Maven Central中都是可用的,所以可以直接在gradle
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-EventBus学习笔记" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-EventBus初探" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2016/04/12/EventBus学习笔记/" class="article-date">
-  <time datetime="2016-04-12T10:00:09.066Z" itemprop="datePublished">2016-04-12</time>
+    <a href="/2016/04/12/EventBus初探/" class="article-date">
+  <time datetime="2016-04-12T10:01:59.000Z" itemprop="datePublished">2016-04-12</time>
 </a>
     
   </div>
   <div class="article-inner">
     
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      EventBus初探
+    </h1>
+  
+
+      </header>
     
     <div class="article-entry" itemprop="articleBody">
       
@@ -108,8 +118,7 @@ EventBus在JCenter和Maven Central中都是可用的,所以可以直接在gradle
 </ul>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">enqueue</span><span class="params">(Subscription subscription, Object event)</span> </span>&#123;</span><br><span class="line">    PendingPost pendingPost = PendingPost.obtainPendingPost(subscription, event);</span><br><span class="line">    <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</span><br><span class="line">        queue.enqueue(pendingPost);</span><br><span class="line">        <span class="keyword">if</span> (!executorRunning) &#123;</span><br><span class="line">            executorRunning = <span class="keyword">true</span>;</span><br><span class="line">            eventBus.getExecutorService().execute(<span class="keyword">this</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">       <span class="keyword">try</span> &#123;</span><br><span class="line">           <span class="keyword">try</span> &#123;</span><br><span class="line">               <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">               <span class="comment">//这里有一个一秒的延时处理,可能是为了减少线程的切换,减少耗时.</span></span><br><span class="line">                   PendingPost pendingPost = queue.poll(<span class="number">1000</span>);</span><br><span class="line">                   <span class="keyword">if</span> (pendingPost == <span class="keyword">null</span>) &#123;</span><br><span class="line">                       <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</span><br><span class="line">                           <span class="comment">// Check again, this time in synchronized</span></span><br><span class="line">                           pendingPost = queue.poll();</span><br><span class="line">                           <span class="keyword">if</span> (pendingPost == <span class="keyword">null</span>) &#123;</span><br><span class="line">                           <span class="comment">//在这里把exeuctorRunning标志位置为false,这里下一次enqueue的时候不会新开线程进行处理.</span></span><br><span class="line">                               executorRunning = <span class="keyword">false</span>;</span><br><span class="line">                               <span class="keyword">return</span>;</span><br><span class="line">                           &#125;</span><br><span class="line">                       &#125;</span><br><span class="line">                   &#125;</span><br><span class="line">                   eventBus.invokeSubscriber(pendingPost);</span><br><span class="line">               &#125;</span><br><span class="line">           &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">               Log.w(<span class="string">"Event"</span>, Thread.currentThread().getName() + <span class="string">" was interruppted"</span>, e);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">       <span class="comment">//退出的时候置为false,下一次才会正常进行处理.</span></span><br><span class="line">           executorRunning = <span class="keyword">false</span>;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-<p>####EventBus架构有什么好处:</p>
-<ul>
+<h4 id="EventBus架构有什么好处"><a href="#EventBus架构有什么好处" class="headerlink" title="EventBus架构有什么好处:"></a>EventBus架构有什么好处:</h4><ul>
 <li><h5 id="实现了消息发送者和接受者间逻辑的解耦"><a href="#实现了消息发送者和接受者间逻辑的解耦" class="headerlink" title="实现了消息发送者和接受者间逻辑的解耦"></a>实现了消息发送者和接受者间逻辑的解耦</h5></li>
 <li><h5 id="提供了对消息事件的多线程处理"><a href="#提供了对消息事件的多线程处理" class="headerlink" title="提供了对消息事件的多线程处理."></a>提供了对消息事件的多线程处理.</h5></li>
 <li><h5 id="还有很多-暂时没有体会到………"><a href="#还有很多-暂时没有体会到………" class="headerlink" title="还有很多,暂时没有体会到………"></a>还有很多,暂时没有体会到………</h5></li>
@@ -118,7 +127,7 @@ EventBus在JCenter和Maven Central中都是可用的,所以可以直接在gradle
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/12/EventBus学习笔记/" data-id="cimx9er2i0005fup9d5sncuhn" class="article-share-link">Share</a>
+      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/12/EventBus初探/" data-id="cimx9er2g0003fup9jigywm29" class="article-share-link">Share</a>
       
       
     </footer>
@@ -127,19 +136,10 @@ EventBus在JCenter和Maven Central中都是可用的,所以可以直接在gradle
     
 <nav id="article-nav">
   
-    <a href="/2016/04/12/EventBus初探/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          EventBus初探
-        
-      </div>
-    </a>
   
-  
-    <a href="/2016/04/07/4-7工作学习记录/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2016/04/12/EventBus学习笔记/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">4-7工作学习记录</div>
+      <div class="article-nav-title"></div>
     </a>
   
 </nav>
