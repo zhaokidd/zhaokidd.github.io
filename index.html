@@ -68,6 +68,49 @@
       <div class="outer">
         <section id="main">
   
+    l<article id="post-CherryPick和几个关于git的问题总结" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/07/06/CherryPick和几个关于git的问题总结/" class="article-date">
+  <time datetime="2016-07-06T06:04:38.000Z" itemprop="datePublished">2016-07-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/07/06/CherryPick和几个关于git的问题总结/">CherryPick和几个关于git的问题总结</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="关于git中的HEAD"><a href="#关于git中的HEAD" class="headerlink" title="关于git中的HEAD"></a>关于git中的HEAD</h3><p>HEAD可以理解为一个指针或者一个指向,它指向当前本地或者远程中的某个具体位置,<br>用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat .git/HEAD</span><br></pre></td></tr></table></figure></p>
+<p>命令可以查看到当前所在的本地分支<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ref: refs/heads/dev</span><br></pre></td></tr></table></figure></p>
+<p>使用<code>cd refs/</code>命令进入该路径下可以查看到<code>heads</code> <code>remotes</code> <code>tags</code>这几个文件夹.</p>
+<p><code>heads</code>中存储了所有本地的分支.<code>remotes</code>存储了所有远程仓库,而<code>tag</code>则是程序员自己添加的标签.</p>
+<h3 id="什么是detached-HEAD"><a href="#什么是detached-HEAD" class="headerlink" title="什么是detached HEAD"></a>什么是detached HEAD</h3><p>当使用 <code>git checkout</code>切换到远程仓库上的某个分支后,本地端的HEAD此时是没有指向某个具体的本地分支的,它指向的只是某次提交而已,在detached HEAD状态下我们仍然可以进行代码的修改和commit,也可以push到指定的远程分支上,只是当我们想要切换分支的时候可能会造成commit的丢失.</p>
+<h6 id="在这种情况下可以使用git-checkout-b-branchname-切换到一个新的本地分支保存所有改动"><a href="#在这种情况下可以使用git-checkout-b-branchname-切换到一个新的本地分支保存所有改动" class="headerlink" title="在这种情况下可以使用git checkout -b branchname 切换到一个新的本地分支保存所有改动."></a>在这种情况下可以使用<code>git checkout -b branchname</code> 切换到一个新的本地分支保存所有改动.</h6><h3 id="CherryPick是什么"><a href="#CherryPick是什么" class="headerlink" title="CherryPick是什么"></a>CherryPick是什么</h3><p><code>cherrypick</code>命令相当于从任意分支上摘取某个commit将该commit应用到当前分支上,可能会产生冲突.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.zhaoyang.meizu.com/2016/07/06/CherryPick和几个关于git的问题总结/" data-id="ciqaj04wr00022wp9n59jf75c" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+  
+
+  
     l<article id="post-Android-Input事件流程" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2016/04/20/Android-Input事件流程/" class="article-date">
@@ -175,7 +218,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/20/Android-Input事件流程/" data-id="cin8ihg5k0003zop94ifajppq" class="article-share-link">Share</a>
+      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/20/Android-Input事件流程/" data-id="ciqaj04ws00032wp932r5rk6o" class="article-share-link">Share</a>
       
       
     </footer>
@@ -219,7 +262,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/18/4-18学习总结/" data-id="cin8ihg590000zop9lgy99ibc" class="article-share-link">Share</a>
+      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/18/4-18学习总结/" data-id="ciqaj04wl00002wp99zihjkb1" class="article-share-link">Share</a>
       
       
     </footer>
@@ -262,7 +305,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/15/AndroidDataBinding学习/" data-id="cin8ihg5l0004zop9e9lg6qwl" class="article-share-link">Share</a>
+      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/15/AndroidDataBinding学习/" data-id="ciqaj04wv00062wp90vvlapln" class="article-share-link">Share</a>
       
       
     </footer>
@@ -303,7 +346,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/14/4-14问题记录/" data-id="cin8ihg640006zop9cxj2g7e9" class="article-share-link">Share</a>
+      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/14/4-14问题记录/" data-id="ciqaj04xj00092wp9qanrvwmz" class="article-share-link">Share</a>
       
       
     </footer>
@@ -367,7 +410,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/12/EventBus初探/" data-id="cin8ihg660007zop9am9z45nu" class="article-share-link">Share</a>
+      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/12/EventBus初探/" data-id="ciqaj04x800082wp9e5hsb49w" class="article-share-link">Share</a>
       
       
     </footer>
@@ -418,7 +461,7 @@ __RemoteCallbackList__
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/07/4-7工作学习记录/" data-id="cin8ihg5i0002zop9p9no2n1b" class="article-share-link">Share</a>
+      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/07/4-7工作学习记录/" data-id="ciqaj04wt00042wp953rql6af" class="article-share-link">Share</a>
       
       
     </footer>
@@ -457,7 +500,7 @@ __RemoteCallbackList__
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/06/4-6学习笔记/" data-id="cin8ihg5g0001zop9f6871tty" class="article-share-link">Share</a>
+      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/06/4-6学习笔记/" data-id="ciqaj04wp00012wp9bxlchrs2" class="article-share-link">Share</a>
       
       
     </footer>
@@ -499,7 +542,7 @@ __RemoteCallbackList__
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/05/4-5学习笔记/" data-id="cin8ihg6h0008zop95pspvzjd" class="article-share-link">Share</a>
+      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/05/4-5学习笔记/" data-id="ciqaj04wu00052wp9xmp7b7qz" class="article-share-link">Share</a>
       
       
     </footer>
@@ -545,7 +588,7 @@ __RemoteCallbackList__
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/05/hello-world/" data-id="cin8ihg5n0005zop9cwjsstrp" class="article-share-link">Share</a>
+      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/05/hello-world/" data-id="ciqaj04x700072wp9hqxpsxi9" class="article-share-link">Share</a>
       
       
     </footer>
@@ -573,7 +616,7 @@ __RemoteCallbackList__
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a></li></ul>
     </div>
   </div>
 
@@ -584,6 +627,10 @@ __RemoteCallbackList__
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2016/07/06/CherryPick和几个关于git的问题总结/">CherryPick和几个关于git的问题总结</a>
+          </li>
         
           <li>
             <a href="/2016/04/20/Android-Input事件流程/">Android-Input事件流程</a>
@@ -599,10 +646,6 @@ __RemoteCallbackList__
         
           <li>
             <a href="/2016/04/14/4-14问题记录/">4-14问题记录</a>
-          </li>
-        
-          <li>
-            <a href="/2016/04/12/EventBus初探/">EventBus初探</a>
           </li>
         
       </ul>
