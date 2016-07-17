@@ -68,6 +68,89 @@
       <div class="outer">
         <section id="main">
   
+    l<article id="post-shell脚本删除空目录" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/07/17/shell脚本删除空目录/" class="article-date">
+  <time datetime="2016-07-17T06:02:26.000Z" itemprop="datePublished">2016-07-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/07/17/shell脚本删除空目录/">shell脚本删除空目录</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h5 id="最近学习shell编程-于是写一个删除所有空目录的脚本来练手-刚开始的想法是从”ls”命令的输出来判断当前的目录底下是否为空"><a href="#最近学习shell编程-于是写一个删除所有空目录的脚本来练手-刚开始的想法是从”ls”命令的输出来判断当前的目录底下是否为空" class="headerlink" title="最近学习shell编程,于是写一个删除所有空目录的脚本来练手,刚开始的想法是从”ls”命令的输出来判断当前的目录底下是否为空"></a>最近学习shell编程,于是写一个删除所有空目录的脚本来练手,刚开始的想法是从”ls”命令的输出来判断当前的目录底下是否为空</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">#编写一个可以自动清除所有空目录的脚本</span><br><span class="line">function circleDelete()&#123;</span><br><span class="line">  for file in `ls $1`</span><br><span class="line">  do</span><br><span class="line">    if [ -d $1&quot;/&quot;$file ]</span><br><span class="line">    then</span><br><span class="line">      if [[ &quot;`ls $1&quot;/&quot;$file`&quot;=&quot;&quot; ]]</span><br><span class="line">      then</span><br><span class="line">        echo &quot;`ls $1&quot;/&quot;$file`&quot;</span><br><span class="line">        echo &quot;is empty&quot;</span><br><span class="line">      else</span><br><span class="line">        echo &quot;not empty&quot;</span><br><span class="line">      fi</span><br><span class="line">      circleDelete $1&quot;/&quot;$file;</span><br><span class="line">    else</span><br><span class="line">      echo &apos;none&apos;;</span><br><span class="line">    fi</span><br><span class="line">  done</span><br><span class="line">&#125;</span><br><span class="line">circleDelete $1</span><br></pre></td></tr></table></figure>
+<h5 id="不过这种直接与空字符串比较的方法似乎并不起作用-亲测并不能判断出当前的目录是否为空"><a href="#不过这种直接与空字符串比较的方法似乎并不起作用-亲测并不能判断出当前的目录是否为空" class="headerlink" title="不过这种直接与空字符串比较的方法似乎并不起作用,亲测并不能判断出当前的目录是否为空"></a>不过这种直接与空字符串比较的方法似乎并不起作用,亲测并不能判断出当前的目录是否为空</h5><h5 id="之后发现一种更好用的方法-就是直接调用linux中的命令-FIND。"><a href="#之后发现一种更好用的方法-就是直接调用linux中的命令-FIND。" class="headerlink" title="之后发现一种更好用的方法,就是直接调用linux中的命令  FIND。"></a>之后发现一种更好用的方法,就是直接调用linux中的命令  <strong>FIND</strong>。</h5><p>直接用这行命令就可以查找出所有的空目录<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find path -empty -type d</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.zhaoyang.meizu.com/2016/07/17/shell脚本删除空目录/" data-id="ciqq7pgq30008p3p9k811c5em" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+  
+
+  
+    l<article id="post-WeakHanlder分析" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/07/06/WeakHanlder分析/" class="article-date">
+  <time datetime="2016-07-06T08:04:02.000Z" itemprop="datePublished">2016-07-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/07/06/WeakHanlder分析/">WeakHanlder分析</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="为什么要使用WeakHandler"><a href="#为什么要使用WeakHandler" class="headerlink" title="为什么要使用WeakHandler"></a>为什么要使用WeakHandler</h3><p>在使用Handler的时候,通常的写法是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Handler mHandler = new Handler();</span><br></pre></td></tr></table></figure></p>
+<p>通过handler的<strong>sendDelayedMessage()</strong>方法可以发送Message或者Runnable.当我们延时发送一条message或者延时执行某个runable的时候,如果在这个时候退出activity,由于消息队列中的每条message都持有handler引用而消息队列是与app生命周期相同的全程存在.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public static Message obtain(Handler h) &#123;</span><br><span class="line">        Message m = obtain();</span><br><span class="line">        m.target = h;</span><br><span class="line"></span><br><span class="line">        return m;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>会导致handler无法释放。<br>而从java的角度来考虑,因为所有的非静态内部类和匿名内部类都会持有对外部类的引用,所以非静态的handler自然会持有对外部对象activity的引用.<br>这样就会导致在message延时的时间内activity的资源无法被回收,从而造成内存泄露.</p>
+<h3 id="WeakHandler的组成和分析"><a href="#WeakHandler的组成和分析" class="headerlink" title="WeakHandler的组成和分析"></a>WeakHandler的组成和分析</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> Handler.Callback mCallback; <span class="comment">// hard reference to Callback. We need to keep callback in memory</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> ExecHandler mExec;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> ChainedRef mRunnables = <span class="keyword">new</span> ChainedRef(<span class="keyword">null</span>);</span><br></pre></td></tr></table></figure>
+<p>weakhandler中包含三个对象,Handler内的<strong>Callback</strong>对象,一个<strong>ExecHandler</strong>对象,还有一个存储runnables对象的<strong>mRunnables</strong>.</p>
+<h4 id="ExecHandler"><a href="#ExecHandler" class="headerlink" title="ExecHandler"></a>ExecHandler</h4><p>callback回调函数会传入exechandler中,exechandler负责callback的执行<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(Message msg)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (mCallback == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">final</span> Handler.Callback callback = mCallback.get();</span><br><span class="line">        <span class="keyword">if</span> (callback == <span class="keyword">null</span>) &#123; <span class="comment">// Already disposed</span></span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        callback.handleMessage(msg);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="mRunnables"><a href="#mRunnables" class="headerlink" title="mRunnables"></a>mRunnables</h4><p>Handler之所以会西楼</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.zhaoyang.meizu.com/2016/07/06/WeakHanlder分析/" data-id="ciqq7pgqc000ap3p9mxycikf9" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+  
+
+  
     l<article id="post-CherryPick和几个关于git的问题总结" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2016/07/06/CherryPick和几个关于git的问题总结/" class="article-date">
@@ -100,7 +183,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.zhaoyang.meizu.com/2016/07/06/CherryPick和几个关于git的问题总结/" data-id="ciqaj04wr00022wp9n59jf75c" class="article-share-link">Share</a>
+      <a data-url="http://blog.zhaoyang.meizu.com/2016/07/06/CherryPick和几个关于git的问题总结/" data-id="ciqq7pgqd000bp3p93f4o0i16" class="article-share-link">Share</a>
       
       
     </footer>
@@ -218,7 +301,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/20/Android-Input事件流程/" data-id="ciqaj04ws00032wp932r5rk6o" class="article-share-link">Share</a>
+      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/20/Android-Input事件流程/" data-id="ciqq7pgpx0004p3p95qjgkp7w" class="article-share-link">Share</a>
       
       
     </footer>
@@ -262,7 +345,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/18/4-18学习总结/" data-id="ciqaj04wl00002wp99zihjkb1" class="article-share-link">Share</a>
+      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/18/4-18学习总结/" data-id="ciqq7pgpp0000p3p9kwlk3pwl" class="article-share-link">Share</a>
       
       
     </footer>
@@ -305,7 +388,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/15/AndroidDataBinding学习/" data-id="ciqaj04wv00062wp90vvlapln" class="article-share-link">Share</a>
+      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/15/AndroidDataBinding学习/" data-id="ciqq7pgpw0003p3p92o3ryiz0" class="article-share-link">Share</a>
       
       
     </footer>
@@ -346,7 +429,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/14/4-14问题记录/" data-id="ciqaj04xj00092wp9qanrvwmz" class="article-share-link">Share</a>
+      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/14/4-14问题记录/" data-id="ciqq7pgqb0009p3p963of2x00" class="article-share-link">Share</a>
       
       
     </footer>
@@ -410,7 +493,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/12/EventBus初探/" data-id="ciqaj04x800082wp9e5hsb49w" class="article-share-link">Share</a>
+      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/12/EventBus初探/" data-id="ciqq7pgpz0006p3p9hrbe1irb" class="article-share-link">Share</a>
       
       
     </footer>
@@ -461,7 +544,7 @@ __RemoteCallbackList__
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/07/4-7工作学习记录/" data-id="ciqaj04wt00042wp953rql6af" class="article-share-link">Share</a>
+      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/07/4-7工作学习记录/" data-id="ciqq7pgpu0002p3p9of2kmbm4" class="article-share-link">Share</a>
       
       
     </footer>
@@ -500,95 +583,7 @@ __RemoteCallbackList__
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/06/4-6学习笔记/" data-id="ciqaj04wp00012wp9bxlchrs2" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-  
-
-  
-    l<article id="post-4-5学习笔记" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/04/05/4-5学习笔记/" class="article-date">
-  <time datetime="2016-04-05T12:17:45.000Z" itemprop="datePublished">2016-04-05</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/04/05/4-5学习笔记/">4-5学习笔记</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="这是配置hexo后写的第一篇博客，记录下今天的学习内容"><a href="#这是配置hexo后写的第一篇博客，记录下今天的学习内容" class="headerlink" title="这是配置hexo后写的第一篇博客，记录下今天的学习内容:"></a>这是配置hexo后写的第一篇博客，记录下今天的学习内容:</h3><h2 id="上午"><a href="#上午" class="headerlink" title="上午:"></a>上午:</h2><pre><code>了解了hexo如何搭建博客,以及如何部署到github上托管,建立了自己的第一个hexo博客.
-</code></pre><h2 id="下午"><a href="#下午" class="headerlink" title="下午:"></a>下午:</h2><pre><code>- 学习如何使用ota平台在内网进行固件发布的测试.
-- 系统升级app有一个bug需要进行固件发布测试.
-</code></pre><h2 id="晚上"><a href="#晚上" class="headerlink" title="晚上:"></a>晚上:</h2><pre><code>- 下载了haroopad这款跨平台的MarkDown文本编辑器,并用haroopad写了自己的第一篇日记blog.
-- 继续学习__jQuery__,为毕设做准备.
-</code></pre>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/05/4-5学习笔记/" data-id="ciqaj04wu00052wp9xmp7b7qz" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-  
-
-  
-    l<article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/04/05/hello-world/" class="article-date">
-  <time datetime="2016-04-05T04:38:49.748Z" itemprop="datePublished">2016-04-05</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/04/05/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/05/hello-world/" data-id="ciqaj04x700072wp9hqxpsxi9" class="article-share-link">Share</a>
+      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/06/4-6学习笔记/" data-id="ciqq7pgpt0001p3p9yx3llluf" class="article-share-link">Share</a>
       
       
     </footer>
@@ -600,6 +595,10 @@ __RemoteCallbackList__
 
   
 
+
+  <nav id="page-nav">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">__('next') &raquo;</a>
+  </nav>
 </section>
         
           <aside id="sidebar">
@@ -629,6 +628,14 @@ __RemoteCallbackList__
       <ul>
         
           <li>
+            <a href="/2016/07/17/shell脚本删除空目录/">shell脚本删除空目录</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/06/WeakHanlder分析/">WeakHanlder分析</a>
+          </li>
+        
+          <li>
             <a href="/2016/07/06/CherryPick和几个关于git的问题总结/">CherryPick和几个关于git的问题总结</a>
           </li>
         
@@ -638,14 +645,6 @@ __RemoteCallbackList__
         
           <li>
             <a href="/2016/04/18/4-18学习总结/">4-18学习总结</a>
-          </li>
-        
-          <li>
-            <a href="/2016/04/15/AndroidDataBinding学习/">AndroidDataBinding学习</a>
-          </li>
-        
-          <li>
-            <a href="/2016/04/14/4-14问题记录/">4-14问题记录</a>
           </li>
         
       </ul>
