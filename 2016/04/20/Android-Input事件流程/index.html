@@ -1,141 +1,104 @@
 <!DOCTYPE html>
-<html lang="en">
-
-<!-- Head tag -->
+<html>
 <head>
-
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!--Description-->
-    
-        <meta name="description" content="一.input 系统初始化安卓系统启动时,会开启SystemServer进程,SystemServer执行main函数,调用startOtherService()初始化windowManagerService和InputManagerService等InputManagerService的构造函数如">
-    
-
-    <!--Author-->
-    
-        <meta name="author" content="人海中一只羊">
-    
-
-    <!--Open Graph Title-->
-    
-        <meta property="og:title" content="Android-Input事件流程"/>
-    
-
-    <!--Open Graph Description-->
-    
-
-    <!--Open Graph Site Name-->
-    <meta property="og:site_name" content="赵阳的blog"/>
-
-    <!--Type page-->
-    
-        <meta property="og:type" content="article" />
-    
-
-    <!--Page Cover-->
-    
-
-        <meta name="twitter:card" content="summary" />
-    
-
-    <!-- Title -->
-    
-    <title>Android-Input事件流程 - 赵阳的blog</title>
-
-    <!-- Bootstrap Core CSS -->
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
-
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/style.css">
-
-    <!-- Custom Fonts -->
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
-    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    <!-- Gallery -->
-    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
-
-    <!-- Google Analytics -->
-    
-
+  <meta charset="utf-8">
+  
+  <title>Android-Input事件流程 | 赵阳的blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="一.input 系统初始化安卓系统启动时,会开启SystemServer进程,SystemServer执行main函数,调用startOtherService()初始化windowManagerService和InputManagerService等InputManagerService的构造函数如下,mPtr是一个指向nativeInputManager对象的指针.12mPtr = nativ">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android-Input事件流程">
+<meta property="og:url" content="http://blog.zhaoyang.meizu.com/2016/04/20/Android-Input事件流程/index.html">
+<meta property="og:site_name" content="赵阳的blog">
+<meta property="og:description" content="一.input 系统初始化安卓系统启动时,会开启SystemServer进程,SystemServer执行main函数,调用startOtherService()初始化windowManagerService和InputManagerService等InputManagerService的构造函数如下,mPtr是一个指向nativeInputManager对象的指针.12mPtr = nativ">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1254064-21693fde0f487a60?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1254064-2e1b18f9862fb250?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1254064-b86a163dc35ad334.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1254064-55e7e4d403f9bd67.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1254064-6564535b5aa60550.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1254064-b6501417ab4d6716.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1254064-da3e5a28868cc359?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1254064-a0d41cab68b60cdb.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2016-04-20T07:01:55.111Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android-Input事件流程">
+<meta name="twitter:description" content="一.input 系统初始化安卓系统启动时,会开启SystemServer进程,SystemServer执行main函数,调用startOtherService()初始化windowManagerService和InputManagerService等InputManagerService的构造函数如下,mPtr是一个指向nativeInputManager对象的指针.12mPtr = nativ">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/1254064-21693fde0f487a60?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+  
+    <link rel="alternate" href="/atom.xml" title="赵阳的blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
 
 </head>
 
-
 <body>
-
-    <!-- Menu -->
-    <!-- Navigation -->
-<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
-    <div class="container-fluid">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header page-scroll">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/">赵阳的blog</a>
-        </div>
-
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav navbar-right">
-                
-            </ul>
-        </div>
-        <!-- /.navbar-collapse -->
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">赵阳的blog</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Read &amp;&amp; Type The Fucking SourceCode.</a>
+        </h2>
+      
     </div>
-    <!-- /.container -->
-</nav>
-
-    <!-- Main Content -->
-    <!-- Page Header -->
-<!-- Set your background image for this header in your post front-matter: cover -->
-
-<header class="intro-header" style="background-image: url('')">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <div class="post-heading">
-                    <h1>Android-Input事件流程</h1>
-                    
-                    <span class="meta">
-                        <!-- Date and Author -->
-                        
-                        2016-04-20
-                    </span>
-                </div>
-            </div>
-        </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.zhaoyang.meizu.com"></form>
+      </div>
     </div>
+  </div>
 </header>
+      <div class="outer">
+        <section id="main">l<article id="post-Android-Input事件流程" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/04/20/Android-Input事件流程/" class="article-date">
+  <time datetime="2016-04-20T06:59:02.000Z" itemprop="datePublished">2016-04-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Android-Input事件流程
+    </h1>
+  
 
-<!-- Post Content -->
-<article>
-    <div class="container">
-        <div class="row">
-
-            <!-- Tags and categories -->
-           
-
-            <!-- Gallery -->
-            
-
-            <!-- Post Main Content -->
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <p><img src="http://upload-images.jianshu.io/upload_images/1254064-21693fde0f487a60?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br><img src="http://upload-images.jianshu.io/upload_images/1254064-2e1b18f9862fb250?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="http://upload-images.jianshu.io/upload_images/1254064-21693fde0f487a60?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br><img src="http://upload-images.jianshu.io/upload_images/1254064-2e1b18f9862fb250?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
 <h3 id="一-input-系统初始化"><a href="#一-input-系统初始化" class="headerlink" title="一.input 系统初始化"></a>一.input 系统初始化</h3><p>安卓系统启动时,会开启SystemServer进程,SystemServer执行main函数,调用<strong>startOtherService()</strong>初始化windowManagerService和InputManagerService等<br>InputManagerService的构造函数如下,<strong>mPtr</strong>是一个指向nativeInputManager对象的指针.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mPtr = nativeInit(<span class="keyword">this</span>, mContext, mHandler.getLooper().getQueue());</span><br><span class="line">LocalServices.addService(InputManagerInternal.class, <span class="keyword">new</span> LocalService());</span><br></pre></td></tr></table></figure></p>
 <p>这里的nativeInit方法调用到<strong>com_android_server_input_InputManagerService.cpp</strong>中NativeInputManager的构造函数<br>这里会构造一个<strong>EventHub</strong>对象并将它传入InputManager的构造函数中,<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">321</span>    sp&lt;EventHub&gt; eventHub = <span class="keyword">new</span> EventHub();</span><br><span class="line"><span class="number">322</span>    mInputManager = <span class="keyword">new</span> InputManager(eventHub, <span class="keyword">this</span>, <span class="keyword">this</span>);</span><br></pre></td></tr></table></figure></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">27</span>InputManager::InputManager(</span><br><span class="line"><span class="number">28</span>        <span class="keyword">const</span> sp&lt;EventHubInterface&gt;&amp; eventHub,</span><br><span class="line"><span class="number">29</span>        <span class="keyword">const</span> sp&lt;InputReaderPolicyInterface&gt;&amp; readerPolicy,</span><br><span class="line"><span class="number">30</span>        <span class="keyword">const</span> sp&lt;InputDispatcherPolicyInterface&gt;&amp; dispatcherPolicy) &#123;</span><br><span class="line"><span class="number">31</span>    mDispatcher = <span class="keyword">new</span> InputDispatcher(dispatcherPolicy);</span><br><span class="line"><span class="number">32</span>    mReader = <span class="keyword">new</span> InputReader(eventHub, readerPolicy, mDispatcher);</span><br><span class="line"><span class="number">33</span>    initialize();</span><br><span class="line"><span class="number">34</span>&#125;</span><br></pre></td></tr></table></figure>
@@ -217,66 +180,152 @@
 <h3 id="client端inputChannel的注册"><a href="#client端inputChannel的注册" class="headerlink" title="client端inputChannel的注册"></a>client端inputChannel的注册</h3><p>WMS中创建的inputChannel跨进程传输到cilent端,转换为client端的inputChannel使用.</p>
 <p>讲解java JNI的注册:<a href="http://my.oschina.net/u/157503/blog/" target="_blank" rel="external">http://my.oschina.net/u/157503/blog/</a></p>
 
-
-                
-            </div>
-
-            <!-- Comments -->
-            
-                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                    
-
-
-                </div>
-            
-        </div>
+      
     </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/20/Android-Input事件流程/" data-id="cis1ivghi0005fjp91rlnttl7" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/07/06/CherryPick和几个关于git的问题总结/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          CherryPick和几个关于git的问题总结
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/04/18/4-18学习总结/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">4-18学习总结</div>
+    </a>
+  
+</nav>
+
+  
 </article>
 
-    <!-- Footer -->
-    <hr />
-
-<!-- Footer -->
-<footer>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <ul class="list-inline text-center">
-                    
-
-                    
-
-                    
-
-                    
-
-                    
-
-                    
-                </ul>
-                <p class="copyright text-muted">Original Theme <a target="_blank" href="http://startbootstrap.com/template-overviews/clean-blog/">Clean Blog</a> from <a href="http://startbootstrap.com/" target="_blank">Start Bootstrap</a></p>
-                <p class="copyright text-muted">Adapted for <a target="_blank" href="https://hexo.io/">Hexo</a> by <a href="http://www.codeblocq.com/" target="_blank">Jonathan Klughertz</a></p>
-            </div>
-        </div>
-    </div>
-</footer>
-
-
-    <!-- After footer scripts -->
+  
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-Android-Input事件流程" data-title="Android-Input事件流程" data-url="http://blog.zhaoyang.meizu.com/2016/04/20/Android-Input事件流程/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'zhaokidd'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+  
+</section>
+        
+          <aside id="sidebar">
+  
     
-<!-- jQuery -->
-<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
 
-<!-- Bootstrap -->
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  
+    
 
-<!-- Gallery -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a></li></ul>
+    </div>
+  </div>
 
-<!-- Disqus Comments -->
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/08/19/AsyncTask的一些分析/">AsyncTask的一些分析</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/27/MzUpdate-DownloadCommon库分析/">MzUpdate-DownloadCommon库分析</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/17/shell脚本删除空目录/">shell脚本删除空目录</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/06/WeakHanlder分析/">WeakHanlder分析</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/06/CherryPick和几个关于git的问题总结/">CherryPick和几个关于git的问题总结</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    <div class="widget tag">
+<h3 class="title">诚意满满的友情链接</h3>
+<ul class="entry"> 
+<li><a href="http://hoyoung.net" title="胡总的 Blog">HuYoung!</a></li>
+<li><a href="http://blog.mtxcxin.cn" title="鹏总的 Blog">MTXC_YP!</a></li>
+<li><a href="http://blog.csdn.net/liang 16286" title="梁神的 Blog">Liang God!</a></li>
+</ul>
+</div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 人海中一只羊<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
 
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
 
+
+<script src="/js/script.js"></script>
+
+  </div>
 </body>
-
 </html>

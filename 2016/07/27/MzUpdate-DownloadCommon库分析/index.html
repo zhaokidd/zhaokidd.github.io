@@ -1,141 +1,97 @@
 <!DOCTYPE html>
-<html lang="en">
-
-<!-- Head tag -->
+<html>
 <head>
-
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!--Description-->
-    
-        <meta name="description" content="关于MzUpdate应用中Download库的分析. 核心类ThreadPoolTheadPool是自定义类,类中定义了一些与操作线程有关的变量1234567891011121314private static final int CORE_POOL_SIZE = 4;private static ">
-    
-
-    <!--Author-->
-    
-        <meta name="author" content="人海中一只羊">
-    
-
-    <!--Open Graph Title-->
-    
-        <meta property="og:title" content="MzUpdate-DownloadCommon库分析"/>
-    
-
-    <!--Open Graph Description-->
-    
-
-    <!--Open Graph Site Name-->
-    <meta property="og:site_name" content="赵阳的blog"/>
-
-    <!--Type page-->
-    
-        <meta property="og:type" content="article" />
-    
-
-    <!--Page Cover-->
-    
-
-        <meta name="twitter:card" content="summary" />
-    
-
-    <!-- Title -->
-    
-    <title>MzUpdate-DownloadCommon库分析 - 赵阳的blog</title>
-
-    <!-- Bootstrap Core CSS -->
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
-
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/style.css">
-
-    <!-- Custom Fonts -->
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
-    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    <!-- Gallery -->
-    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
-
-    <!-- Google Analytics -->
-    
-
+  <meta charset="utf-8">
+  
+  <title>MzUpdate-DownloadCommon库分析 | 赵阳的blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="关于MzUpdate应用中Download库的分析. 核心类ThreadPoolTheadPool是自定义类,类中定义了一些与操作线程有关的变量1234567891011121314private static final int CORE_POOL_SIZE = 4;private static final int MAX_POOL_SIZE = 8;private static final">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MzUpdate-DownloadCommon库分析">
+<meta property="og:url" content="http://blog.zhaoyang.meizu.com/2016/07/27/MzUpdate-DownloadCommon库分析/index.html">
+<meta property="og:site_name" content="赵阳的blog">
+<meta property="og:description" content="关于MzUpdate应用中Download库的分析. 核心类ThreadPoolTheadPool是自定义类,类中定义了一些与操作线程有关的变量1234567891011121314private static final int CORE_POOL_SIZE = 4;private static final int MAX_POOL_SIZE = 8;private static final">
+<meta property="og:image" content="http://oaydkbbin.bkt.clouddn.com/image/markdown/executorservice.bmpExecutorService.bmp">
+<meta property="og:updated_time" content="2016-08-14T10:15:45.569Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MzUpdate-DownloadCommon库分析">
+<meta name="twitter:description" content="关于MzUpdate应用中Download库的分析. 核心类ThreadPoolTheadPool是自定义类,类中定义了一些与操作线程有关的变量1234567891011121314private static final int CORE_POOL_SIZE = 4;private static final int MAX_POOL_SIZE = 8;private static final">
+<meta name="twitter:image" content="http://oaydkbbin.bkt.clouddn.com/image/markdown/executorservice.bmpExecutorService.bmp">
+  
+    <link rel="alternate" href="/atom.xml" title="赵阳的blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
 
 </head>
 
-
 <body>
-
-    <!-- Menu -->
-    <!-- Navigation -->
-<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
-    <div class="container-fluid">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header page-scroll">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/">赵阳的blog</a>
-        </div>
-
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav navbar-right">
-                
-            </ul>
-        </div>
-        <!-- /.navbar-collapse -->
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">赵阳的blog</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Read &amp;&amp; Type The Fucking SourceCode.</a>
+        </h2>
+      
     </div>
-    <!-- /.container -->
-</nav>
-
-    <!-- Main Content -->
-    <!-- Page Header -->
-<!-- Set your background image for this header in your post front-matter: cover -->
-
-<header class="intro-header" style="background-image: url('')">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <div class="post-heading">
-                    <h1>MzUpdate-DownloadCommon库分析</h1>
-                    
-                    <span class="meta">
-                        <!-- Date and Author -->
-                        
-                        2016-07-27
-                    </span>
-                </div>
-            </div>
-        </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.zhaoyang.meizu.com"></form>
+      </div>
     </div>
+  </div>
 </header>
+      <div class="outer">
+        <section id="main">l<article id="post-MzUpdate-DownloadCommon库分析" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/07/27/MzUpdate-DownloadCommon库分析/" class="article-date">
+  <time datetime="2016-07-27T02:04:55.000Z" itemprop="datePublished">2016-07-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      MzUpdate-DownloadCommon库分析
+    </h1>
+  
 
-<!-- Post Content -->
-<article>
-    <div class="container">
-        <div class="row">
-
-            <!-- Tags and categories -->
-           
-
-            <!-- Gallery -->
-            
-
-            <!-- Post Main Content -->
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <h1 id="关于MzUpdate应用中Download库的分析"><a href="#关于MzUpdate应用中Download库的分析" class="headerlink" title=" 关于MzUpdate应用中Download库的分析."></a> 关于MzUpdate应用中Download库的分析.</h1><h2 id="核心类ThreadPool"><a href="#核心类ThreadPool" class="headerlink" title=" 核心类ThreadPool"></a> 核心类ThreadPool</h2><p>TheadPool是自定义类,类中定义了一些与操作线程有关的变量<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> CORE_POOL_SIZE = <span class="number">4</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MAX_POOL_SIZE = <span class="number">8</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> KEEP_ALIVE_TIME = <span class="number">10</span>; <span class="comment">// 10 seconds</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Resource type</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MODE_NONE = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MODE_CPU = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MODE_NETWORK = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">ResourceCounter mCpuCounter = <span class="keyword">new</span> ResourceCounter(<span class="number">2</span>);</span><br><span class="line">ResourceCounter mNetworkCounter = <span class="keyword">new</span> ResourceCounter(<span class="number">2</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> ThreadPool sThreadPool;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> Executor mExecutor;</span><br></pre></td></tr></table></figure></p>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="关于MzUpdate应用中Download库的分析"><a href="#关于MzUpdate应用中Download库的分析" class="headerlink" title=" 关于MzUpdate应用中Download库的分析."></a> 关于MzUpdate应用中Download库的分析.</h1><h2 id="核心类ThreadPool"><a href="#核心类ThreadPool" class="headerlink" title=" 核心类ThreadPool"></a> 核心类ThreadPool</h2><p>TheadPool是自定义类,类中定义了一些与操作线程有关的变量<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> CORE_POOL_SIZE = <span class="number">4</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MAX_POOL_SIZE = <span class="number">8</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> KEEP_ALIVE_TIME = <span class="number">10</span>; <span class="comment">// 10 seconds</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Resource type</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MODE_NONE = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MODE_CPU = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MODE_NETWORK = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">ResourceCounter mCpuCounter = <span class="keyword">new</span> ResourceCounter(<span class="number">2</span>);</span><br><span class="line">ResourceCounter mNetworkCounter = <span class="keyword">new</span> ResourceCounter(<span class="number">2</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> ThreadPool sThreadPool;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> Executor mExecutor;</span><br></pre></td></tr></table></figure></p>
 <ul>
 <li><strong> CORE_POOL_SIZE </strong>：核心线程即使处于idle状态也会被保存在线程池中.</li>
 <li><p><strong>KEEP_ALIVE_TIME</strong> : 当线程池中线程数量超过线程池上限,idle状态的线程会被保存的最久的时间.</p>
@@ -150,66 +106,152 @@
 <h5 id="ThreadPool的官方文档时这样描述的"><a href="#ThreadPool的官方文档时这样描述的" class="headerlink" title="ThreadPool的官方文档时这样描述的"></a>ThreadPool的官方文档时这样描述的</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">在执行大量的异步任务的时候,线程池通常能有很好的性能,这归功与执行每个task的消耗的减少,并且线程池提供了一种方法来绑定和管理资源(包括线程).线程池也包含了一些基本的数据,例如已完成的任务数量等.</span><br><span class="line">为了能在一系列环境中都起到作用,这个类提供了许多可调节的参数和可供扩展的回调.</span><br><span class="line">但是,开发者们通常更乐意使用工厂方法返回的实例.例如newCachedThreadPool(未绑定的线程池,会自动进行线程的释放),newSingleThreadExecutor(只使用一个后台线程),newFixedThreadPool(大小固定的线程池).</span><br><span class="line">每当有新任务要处理的时候,如果此时核心线程池中的线程数量没有到达最大,一个新线程就会创造出来来处理这个请求,即使其它剩下的工作线程仍处于idle状态.</span><br><span class="line">但我们仍然可以通过手动的方式来控制核心线程池的数量以及线程池的最大线程数,当任务队列非空的时候我们也可以预先将线程全部初始化.</span><br><span class="line">如果目前线程池中的线程数量已经到达了最大值,一旦当线程池中的线程处于idle状态的时间超过了KeepAliveTime，这提供了一种机制,当线程池处于不活跃的状态的时候减少消耗,一般来说这种机制只作用与核心线程池之外的线程,但可以通过allowThreadTimeOut()方法手动设置只要keepAliveTime不为0即可.</span><br><span class="line">同时BlockingQueue会被配合使用:当线程数量没有填满核心线程池的时候,Executor会更偏向与添加新线程来执行任务,而不是阻塞任务.如果队列是非阻塞的,那么除非线程数量达到了最大,线程池会建立一个新的线程,否则该任务会被rejected.</span><br><span class="line">ThreadPool中使用的队列种类:</span><br><span class="line">1.Direct handoffs队列,例如SynchronousQueue,同步队列会直接将任务入队而不是保留他们,此时如果没有线程能立刻执行它,任务的入队操作就会失败,</span><br><span class="line">2.Unbounded queues例如LinkedBlockingQueue,入队的任务数量不受限制,当所有核心线程均处于忙碌状态时,新任务将会在队列中等待.这种队列在处理短暂的任务时会显得平滑,然而当任务增加的速度大于处理速度的时候就会造成任务的堆积.</span><br><span class="line">3.有限的队列,例如ArrayBlockingQueue,当线程池的最大数量确定的时候这种队列有助于防止资源的枯竭,但会变得难以调节控制。队列大小和线程池最大数量需要互相权衡:使用大队列和较小的线程池上限能最小化cpu的使用率以及操作系统资源和上下文环境切换的开销,但却会人为地导致低产出.比如当任务经常因为IO读写而阻塞,比起开发者的设定系统通常能更好的将事件调度给更多的线程.使用较小的队列通常需要干更大的线程池,这样会导致cpu变得更忙碌但可能会导致难以接受的调度开销,同时会导致低产出.</span><br><span class="line"></span><br><span class="line">当Executor被关闭的时候,提交到execute()方法的新任务将会被rejected.当队列有限或者线程数量有上限的时候也是相同的情况.</span><br><span class="line">当tasks被rejected的时候,execute()方法会执行RejectedExecutionHandler的rejectedExecutionHandler()方法.</span><br><span class="line">android提供了四种预定义的策略.</span><br><span class="line"></span><br><span class="line">1.AbortPolicy : 抛出runtime异常,RejectedExecutionExeception.</span><br><span class="line">2.CallerRunsPolicy : 调用execute()方法的线程来执行任务.这提供了一种简单的反馈机制来减慢新任务被提交的速度.</span><br><span class="line">3.DiscardPolicy : 无法执行的任务就会被丢弃.</span><br><span class="line">4.DiscardOldestPolicy: 如果executor没有关闭,工作队列的第一个任务会被丢弃，然后execution会重新尝试.</span><br><span class="line"></span><br><span class="line">getQueue()返回work queue的实例以供加锁监控和调试.因为其它目的使用该方法都是不被鼓励的.</span><br><span class="line"></span><br><span class="line">程序中不再保留线程的线程池会自动被回收.如果你想要保证在忘记调用shutdown方法的情况下也保证没有引用的线程池也被回收,你就要通过设定合适的keep-alive时间保证无用的线程最终消亡.</span><br></pre></td></tr></table></figure>
 <h5 id="Worker对象"><a href="#Worker对象" class="headerlink" title="Worker对象"></a>Worker对象</h5><p>内部持有Thread对象,管理线程执行任务的情况.</p>
 
-
-                
-            </div>
-
-            <!-- Comments -->
-            
-                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                    
-
-
-                </div>
-            
-        </div>
+      
     </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.zhaoyang.meizu.com/2016/07/27/MzUpdate-DownloadCommon库分析/" data-id="cis1ivghq000afjp9iawjlamb" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/08/19/AsyncTask的一些分析/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          AsyncTask的一些分析
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/07/17/shell脚本删除空目录/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">shell脚本删除空目录</div>
+    </a>
+  
+</nav>
+
+  
 </article>
 
-    <!-- Footer -->
-    <hr />
-
-<!-- Footer -->
-<footer>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <ul class="list-inline text-center">
-                    
-
-                    
-
-                    
-
-                    
-
-                    
-
-                    
-                </ul>
-                <p class="copyright text-muted">Original Theme <a target="_blank" href="http://startbootstrap.com/template-overviews/clean-blog/">Clean Blog</a> from <a href="http://startbootstrap.com/" target="_blank">Start Bootstrap</a></p>
-                <p class="copyright text-muted">Adapted for <a target="_blank" href="https://hexo.io/">Hexo</a> by <a href="http://www.codeblocq.com/" target="_blank">Jonathan Klughertz</a></p>
-            </div>
-        </div>
-    </div>
-</footer>
-
-
-    <!-- After footer scripts -->
+  
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-MzUpdate-DownloadCommon库分析" data-title="MzUpdate-DownloadCommon库分析" data-url="http://blog.zhaoyang.meizu.com/2016/07/27/MzUpdate-DownloadCommon库分析/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'zhaokidd'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+  
+</section>
+        
+          <aside id="sidebar">
+  
     
-<!-- jQuery -->
-<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
 
-<!-- Bootstrap -->
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  
+    
 
-<!-- Gallery -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a></li></ul>
+    </div>
+  </div>
 
-<!-- Disqus Comments -->
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/08/19/AsyncTask的一些分析/">AsyncTask的一些分析</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/27/MzUpdate-DownloadCommon库分析/">MzUpdate-DownloadCommon库分析</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/17/shell脚本删除空目录/">shell脚本删除空目录</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/06/WeakHanlder分析/">WeakHanlder分析</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/06/CherryPick和几个关于git的问题总结/">CherryPick和几个关于git的问题总结</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    <div class="widget tag">
+<h3 class="title">诚意满满的友情链接</h3>
+<ul class="entry"> 
+<li><a href="http://hoyoung.net" title="胡总的 Blog">HuYoung!</a></li>
+<li><a href="http://blog.mtxcxin.cn" title="鹏总的 Blog">MTXC_YP!</a></li>
+<li><a href="http://blog.csdn.net/liang 16286" title="梁神的 Blog">Liang God!</a></li>
+</ul>
+</div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 人海中一只羊<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
 
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
 
+
+<script src="/js/script.js"></script>
+
+  </div>
 </body>
-
 </html>

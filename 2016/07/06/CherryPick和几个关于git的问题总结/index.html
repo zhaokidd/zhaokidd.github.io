@@ -1,209 +1,256 @@
 <!DOCTYPE html>
-<html lang="en">
-
-<!-- Head tag -->
+<html>
 <head>
-
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!--Description-->
-    
-        <meta name="description" content="关于git中的HEADHEAD可以理解为一个指针或者一个指向,它指向当前本地或者远程中的某个具体位置,用1cat .git/HEAD
+  <meta charset="utf-8">
+  
+  <title>CherryPick和几个关于git的问题总结 | 赵阳的blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="关于git中的HEADHEAD可以理解为一个指针或者一个指向,它指向当前本地或者远程中的某个具体位置,用1cat .git/HEAD
 命令可以查看到当前所在的本地分支1ref: refs/heads/dev
-使用cd refs/命令进入该路径下可以查看到heads remotes tags这几个文件">
-    
-
-    <!--Author-->
-    
-        <meta name="author" content="人海中一只羊">
-    
-
-    <!--Open Graph Title-->
-    
-        <meta property="og:title" content="CherryPick和几个关于git的问题总结"/>
-    
-
-    <!--Open Graph Description-->
-    
-
-    <!--Open Graph Site Name-->
-    <meta property="og:site_name" content="赵阳的blog"/>
-
-    <!--Type page-->
-    
-        <meta property="og:type" content="article" />
-    
-
-    <!--Page Cover-->
-    
-
-        <meta name="twitter:card" content="summary" />
-    
-
-    <!-- Title -->
-    
-    <title>CherryPick和几个关于git的问题总结 - 赵阳的blog</title>
-
-    <!-- Bootstrap Core CSS -->
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
-
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/style.css">
-
-    <!-- Custom Fonts -->
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
-    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    <!-- Gallery -->
-    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
-
-    <!-- Google Analytics -->
-    
-
+使用cd refs/命令进入该路径下可以查看到heads remotes tags这几个文件夹.
+heads中存储了所有本地的分支.remotes存储了所有远程仓库,而tag则是程序员自己添加">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CherryPick和几个关于git的问题总结">
+<meta property="og:url" content="http://blog.zhaoyang.meizu.com/2016/07/06/CherryPick和几个关于git的问题总结/index.html">
+<meta property="og:site_name" content="赵阳的blog">
+<meta property="og:description" content="关于git中的HEADHEAD可以理解为一个指针或者一个指向,它指向当前本地或者远程中的某个具体位置,用1cat .git/HEAD
+命令可以查看到当前所在的本地分支1ref: refs/heads/dev
+使用cd refs/命令进入该路径下可以查看到heads remotes tags这几个文件夹.
+heads中存储了所有本地的分支.remotes存储了所有远程仓库,而tag则是程序员自己添加">
+<meta property="og:updated_time" content="2016-07-06T06:50:59.584Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CherryPick和几个关于git的问题总结">
+<meta name="twitter:description" content="关于git中的HEADHEAD可以理解为一个指针或者一个指向,它指向当前本地或者远程中的某个具体位置,用1cat .git/HEAD
+命令可以查看到当前所在的本地分支1ref: refs/heads/dev
+使用cd refs/命令进入该路径下可以查看到heads remotes tags这几个文件夹.
+heads中存储了所有本地的分支.remotes存储了所有远程仓库,而tag则是程序员自己添加">
+  
+    <link rel="alternate" href="/atom.xml" title="赵阳的blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
 
 </head>
 
-
 <body>
-
-    <!-- Menu -->
-    <!-- Navigation -->
-<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
-    <div class="container-fluid">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header page-scroll">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/">赵阳的blog</a>
-        </div>
-
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav navbar-right">
-                
-            </ul>
-        </div>
-        <!-- /.navbar-collapse -->
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">赵阳的blog</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Read &amp;&amp; Type The Fucking SourceCode.</a>
+        </h2>
+      
     </div>
-    <!-- /.container -->
-</nav>
-
-    <!-- Main Content -->
-    <!-- Page Header -->
-<!-- Set your background image for this header in your post front-matter: cover -->
-
-<header class="intro-header" style="background-image: url('')">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <div class="post-heading">
-                    <h1>CherryPick和几个关于git的问题总结</h1>
-                    
-                    <span class="meta">
-                        <!-- Date and Author -->
-                        
-                        2016-07-06
-                    </span>
-                </div>
-            </div>
-        </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.zhaoyang.meizu.com"></form>
+      </div>
     </div>
+  </div>
 </header>
+      <div class="outer">
+        <section id="main">l<article id="post-CherryPick和几个关于git的问题总结" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/07/06/CherryPick和几个关于git的问题总结/" class="article-date">
+  <time datetime="2016-07-06T06:04:38.000Z" itemprop="datePublished">2016-07-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      CherryPick和几个关于git的问题总结
+    </h1>
+  
 
-<!-- Post Content -->
-<article>
-    <div class="container">
-        <div class="row">
-
-            <!-- Tags and categories -->
-           
-
-            <!-- Gallery -->
-            
-
-            <!-- Post Main Content -->
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <h3 id="关于git中的HEAD"><a href="#关于git中的HEAD" class="headerlink" title="关于git中的HEAD"></a>关于git中的HEAD</h3><p>HEAD可以理解为一个指针或者一个指向,它指向当前本地或者远程中的某个具体位置,<br>用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat .git/HEAD</span><br></pre></td></tr></table></figure></p>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="关于git中的HEAD"><a href="#关于git中的HEAD" class="headerlink" title="关于git中的HEAD"></a>关于git中的HEAD</h3><p>HEAD可以理解为一个指针或者一个指向,它指向当前本地或者远程中的某个具体位置,<br>用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat .git/HEAD</span><br></pre></td></tr></table></figure></p>
 <p>命令可以查看到当前所在的本地分支<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ref: refs/heads/dev</span><br></pre></td></tr></table></figure></p>
 <p>使用<code>cd refs/</code>命令进入该路径下可以查看到<code>heads</code> <code>remotes</code> <code>tags</code>这几个文件夹.</p>
 <p><code>heads</code>中存储了所有本地的分支.<code>remotes</code>存储了所有远程仓库,而<code>tag</code>则是程序员自己添加的标签.</p>
 <h3 id="什么是detached-HEAD"><a href="#什么是detached-HEAD" class="headerlink" title="什么是detached HEAD"></a>什么是detached HEAD</h3><p>当使用 <code>git checkout</code>切换到远程仓库上的某个分支后,本地端的HEAD此时是没有指向某个具体的本地分支的,它指向的只是某次提交而已,在detached HEAD状态下我们仍然可以进行代码的修改和commit,也可以push到指定的远程分支上,只是当我们想要切换分支的时候可能会造成commit的丢失.</p>
 <h6 id="在这种情况下可以使用git-checkout-b-branchname-切换到一个新的本地分支保存所有改动"><a href="#在这种情况下可以使用git-checkout-b-branchname-切换到一个新的本地分支保存所有改动" class="headerlink" title="在这种情况下可以使用git checkout -b branchname 切换到一个新的本地分支保存所有改动."></a>在这种情况下可以使用<code>git checkout -b branchname</code> 切换到一个新的本地分支保存所有改动.</h6><h3 id="CherryPick是什么"><a href="#CherryPick是什么" class="headerlink" title="CherryPick是什么"></a>CherryPick是什么</h3><p><code>cherrypick</code>命令相当于从任意分支上摘取某个commit将该commit应用到当前分支上,可能会产生冲突.</p>
 
-
-                
-            </div>
-
-            <!-- Comments -->
-            
-                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                    
-
-
-                </div>
-            
-        </div>
+      
     </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.zhaoyang.meizu.com/2016/07/06/CherryPick和几个关于git的问题总结/" data-id="cis1ivghp0009fjp91een0cen" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/07/06/WeakHanlder分析/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          WeakHanlder分析
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/04/20/Android-Input事件流程/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Android-Input事件流程</div>
+    </a>
+  
+</nav>
+
+  
 </article>
 
-    <!-- Footer -->
-    <hr />
-
-<!-- Footer -->
-<footer>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <ul class="list-inline text-center">
-                    
-
-                    
-
-                    
-
-                    
-
-                    
-
-                    
-                </ul>
-                <p class="copyright text-muted">Original Theme <a target="_blank" href="http://startbootstrap.com/template-overviews/clean-blog/">Clean Blog</a> from <a href="http://startbootstrap.com/" target="_blank">Start Bootstrap</a></p>
-                <p class="copyright text-muted">Adapted for <a target="_blank" href="https://hexo.io/">Hexo</a> by <a href="http://www.codeblocq.com/" target="_blank">Jonathan Klughertz</a></p>
-            </div>
-        </div>
-    </div>
-</footer>
-
-
-    <!-- After footer scripts -->
+  
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-CherryPick和几个关于git的问题总结" data-title="CherryPick和几个关于git的问题总结" data-url="http://blog.zhaoyang.meizu.com/2016/07/06/CherryPick和几个关于git的问题总结/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'zhaokidd'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+  
+</section>
+        
+          <aside id="sidebar">
+  
     
-<!-- jQuery -->
-<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
 
-<!-- Bootstrap -->
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  
+    
 
-<!-- Gallery -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a></li></ul>
+    </div>
+  </div>
 
-<!-- Disqus Comments -->
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/08/19/AsyncTask的一些分析/">AsyncTask的一些分析</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/27/MzUpdate-DownloadCommon库分析/">MzUpdate-DownloadCommon库分析</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/17/shell脚本删除空目录/">shell脚本删除空目录</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/06/WeakHanlder分析/">WeakHanlder分析</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/06/CherryPick和几个关于git的问题总结/">CherryPick和几个关于git的问题总结</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    <div class="widget tag">
+<h3 class="title">诚意满满的友情链接</h3>
+<ul class="entry"> 
+<li><a href="http://hoyoung.net" title="胡总的 Blog">HuYoung!</a></li>
+<li><a href="http://blog.mtxcxin.cn" title="鹏总的 Blog">MTXC_YP!</a></li>
+<li><a href="http://blog.csdn.net/liang 16286" title="梁神的 Blog">Liang God!</a></li>
+</ul>
+</div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 人海中一只羊<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
 
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
 
+
+<script src="/js/script.js"></script>
+
+  </div>
 </body>
-
 </html>
