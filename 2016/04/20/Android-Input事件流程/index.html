@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--Description-->
+    
+        <meta name="description" content="一.input 系统初始化安卓系统启动时,会开启SystemServer进程,SystemServer执行main函数,调用startOtherService()初始化windowManagerService和InputManagerService等InputManagerService的构造函数如">
+    
+
+    <!--Author-->
+    
+        <meta name="author" content="人海中一只羊">
+    
+
+    <!--Open Graph Title-->
+    
+        <meta property="og:title" content="Android-Input事件流程"/>
+    
+
+    <!--Open Graph Description-->
+    
+
+    <!--Open Graph Site Name-->
+    <meta property="og:site_name" content="赵阳的blog"/>
+
+    <!--Type page-->
+    
+        <meta property="og:type" content="article" />
+    
+
+    <!--Page Cover-->
+    
+
+        <meta name="twitter:card" content="summary" />
+    
+
+    <!-- Title -->
+    
+    <title>Android-Input事件流程 - 赵阳的blog</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- Custom Fonts -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Gallery -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+    <!-- Google Analytics -->
+    
+
+
+</head>
+
+
+<body>
+
+    <!-- Menu -->
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">赵阳的blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+    <!-- Main Content -->
+    <!-- Page Header -->
+<!-- Set your background image for this header in your post front-matter: cover -->
+
+<header class="intro-header" style="background-image: url('')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>Android-Input事件流程</h1>
+                    
+                    <span class="meta">
+                        <!-- Date and Author -->
+                        
+                        2016-04-20
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Tags and categories -->
+           
+
+            <!-- Gallery -->
+            
+
+            <!-- Post Main Content -->
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <p><img src="http://upload-images.jianshu.io/upload_images/1254064-21693fde0f487a60?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br><img src="http://upload-images.jianshu.io/upload_images/1254064-2e1b18f9862fb250?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<h3 id="一-input-系统初始化"><a href="#一-input-系统初始化" class="headerlink" title="一.input 系统初始化"></a>一.input 系统初始化</h3><p>安卓系统启动时,会开启SystemServer进程,SystemServer执行main函数,调用<strong>startOtherService()</strong>初始化windowManagerService和InputManagerService等<br>InputManagerService的构造函数如下,<strong>mPtr</strong>是一个指向nativeInputManager对象的指针.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mPtr = nativeInit(<span class="keyword">this</span>, mContext, mHandler.getLooper().getQueue());</span><br><span class="line">LocalServices.addService(InputManagerInternal.class, <span class="keyword">new</span> LocalService());</span><br></pre></td></tr></table></figure></p>
+<p>这里的nativeInit方法调用到<strong>com_android_server_input_InputManagerService.cpp</strong>中NativeInputManager的构造函数<br>这里会构造一个<strong>EventHub</strong>对象并将它传入InputManager的构造函数中,<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">321</span>    sp&lt;EventHub&gt; eventHub = <span class="keyword">new</span> EventHub();</span><br><span class="line"><span class="number">322</span>    mInputManager = <span class="keyword">new</span> InputManager(eventHub, <span class="keyword">this</span>, <span class="keyword">this</span>);</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">27</span>InputManager::InputManager(</span><br><span class="line"><span class="number">28</span>        <span class="keyword">const</span> sp&lt;EventHubInterface&gt;&amp; eventHub,</span><br><span class="line"><span class="number">29</span>        <span class="keyword">const</span> sp&lt;InputReaderPolicyInterface&gt;&amp; readerPolicy,</span><br><span class="line"><span class="number">30</span>        <span class="keyword">const</span> sp&lt;InputDispatcherPolicyInterface&gt;&amp; dispatcherPolicy) &#123;</span><br><span class="line"><span class="number">31</span>    mDispatcher = <span class="keyword">new</span> InputDispatcher(dispatcherPolicy);</span><br><span class="line"><span class="number">32</span>    mReader = <span class="keyword">new</span> InputReader(eventHub, readerPolicy, mDispatcher);</span><br><span class="line"><span class="number">33</span>    initialize();</span><br><span class="line"><span class="number">34</span>&#125;</span><br></pre></td></tr></table></figure>
+<p>initialize函数中会设置两个线程来运行InputReader和InputDispatcher<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">49</span>    mReaderThread = <span class="keyword">new</span> InputReaderThread(mReader);</span><br><span class="line"><span class="number">50</span>    mDispatcherThread = <span class="keyword">new</span> InputDispatcherThread(mDispatcher);</span><br></pre></td></tr></table></figure></p>
+<p>inputManagerService会设置一个回调,供windowManager调用,之后会调用inputManager的start()方法<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wm = WindowManagerService.main(context, inputManager,</span><br><span class="line">                    mFactoryTestMode != FactoryTest.FACTORY_TEST_LOW_LEVEL,</span><br><span class="line">                    !mFirstBoot, mOnlyCore);</span><br><span class="line">inputManager.setWindowManagerCallbacks(wm.getInputMonitor());</span><br><span class="line">inputManager.start();</span><br></pre></td></tr></table></figure></p>
+<p>start方法会最终调用到InputManager.cpp 文件中的  <strong>status_t InputManager::start()</strong>函数<br>主要步骤如下,运行dispatcherThread的run()方法和mReaderThread的run()方法.<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">54</span>    <span class="keyword">status_t</span> result = mDispatcherThread-&gt;run(<span class="string">"InputDispatcher"</span>, PRIORITY_URGENT_DISPLAY);</span><br><span class="line"><span class="number">55</span>    <span class="keyword">if</span> (result) &#123;</span><br><span class="line"><span class="number">56</span>        ALOGE(<span class="string">"Could not start InputDispatcher thread due to error %d."</span>, result);</span><br><span class="line"><span class="number">57</span>        <span class="keyword">return</span> result;</span><br><span class="line"><span class="number">58</span>    &#125;</span><br><span class="line"><span class="number">59</span></span><br><span class="line"><span class="number">60</span>    result = mReaderThread-&gt;run(<span class="string">"InputReader"</span>, PRIORITY_URGENT_DISPLAY);</span><br><span class="line"><span class="number">61</span>    <span class="keyword">if</span> (result) &#123;</span><br><span class="line"><span class="number">62</span>        ALOGE(<span class="string">"Could not start InputReader thread due to error %d."</span>, result);</span><br><span class="line"><span class="number">63</span></span><br><span class="line"><span class="number">64</span>        mDispatcherThread-&gt;requestExit();</span><br><span class="line"><span class="number">65</span>        <span class="keyword">return</span> result;</span><br><span class="line"><span class="number">66</span>    &#125;</span><br><span class="line"><span class="number">67</span></span><br><span class="line"><span class="number">68</span>    <span class="keyword">return</span> OK;</span><br></pre></td></tr></table></figure></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1254064-b86a163dc35ad334.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="新建位图图像.jpg"></p>
+<h3 id="二-读取input-events"><a href="#二-读取input-events" class="headerlink" title="二.读取input events"></a>二.读取input events</h3><p>mReaderThread-&gt;run()方法会调用自身的 threadLoop()方法,进而调用mReader的loopOnce()方法,<br>loopOnce()方法主要分为三个主要的步骤.</p>
+<p>####步骤一:<br>在该方法中会通过EventHub来获取input事件,计算缓冲区大小,判断是否有新的事件产生,然后用processEventsLocked()方法来处理events<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"> size_t count = mEventHub-&gt;getEvents(timeoutMillis, mEventBuffer, EVENT_BUFFER_SIZE);</span><br><span class="line"><span class="number">314</span>        <span class="keyword">if</span> (count) &#123;</span><br><span class="line"><span class="number">315</span>            processEventsLocked(mEventBuffer, count);</span><br><span class="line"><span class="number">316</span>        &#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="步骤二"><a href="#步骤二" class="headerlink" title="步骤二:"></a>步骤二:</h4><p>在processEventsLocked()方法中会调用<strong><em>processEventsForDeviceLocked(deviceId, rawEvent, batchSize)</em></strong>函数,该函数会确定设备编号并调用<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">531</span>    device-&gt;process(rawEvents, count);</span><br></pre></td></tr></table></figure></p>
+<h4 id="安卓系统中每种输入设备都对应了一种Mapper-比如SwitchInputMapper-VibratorInputMapper-KeyBoardInputMapper"><a href="#安卓系统中每种输入设备都对应了一种Mapper-比如SwitchInputMapper-VibratorInputMapper-KeyBoardInputMapper" class="headerlink" title="安卓系统中每种输入设备都对应了一种Mapper,比如SwitchInputMapper, VibratorInputMapper,KeyBoardInputMapper"></a>安卓系统中每种输入设备都对应了一种Mapper,比如SwitchInputMapper, VibratorInputMapper,KeyBoardInputMapper</h4><h4 id="在process-函数中会调用对应mapper的processKey-函数-在该函数中具体处理不同的input事件"><a href="#在process-函数中会调用对应mapper的processKey-函数-在该函数中具体处理不同的input事件" class="headerlink" title="在process()函数中会调用对应mapper的processKey()函数,在该函数中具体处理不同的input事件"></a>在process()函数中会调用对应mapper的<strong>processKey()</strong>函数,在该函数中具体处理不同的input事件</h4><p>在processKey()函数中会调用   getListener()-&gt;notifyKey(),  也就是调用mQueuedListener.notifyKey();</p>
+<p>而这个listener的notifyKey()方法只有一行代码,将notifyKeyArgs对象放入到mArgsQueue队列中.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mArgsQueue.push(**<span class="keyword">new</span>** NotifyKeyArgs(*args));</span><br></pre></td></tr></table></figure></p>
+<h3 id="步骤三"><a href="#步骤三" class="headerlink" title="步骤三:"></a>步骤三:</h3><p>最后一步会将mQueuedListener队列中的所有内容全部清空.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mQueuedListener-&gt;flush();</span><br></pre></td></tr></table></figure></p>
+<p>flush()函数中将所有的NotifyArgs对象取出,依次执行args-&gt;notify()<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">171</span><span class="keyword">void</span> QueuedInputListener::flush() &#123;</span><br><span class="line"><span class="number">172</span>    size_t count = mArgsQueue.size();</span><br><span class="line"><span class="number">173</span>    <span class="keyword">for</span> (size_t i = <span class="number">0</span>; i &lt; count; i++) &#123;</span><br><span class="line"><span class="number">174</span>        NotifyArgs* args = mArgsQueue[i];</span><br><span class="line"><span class="number">175</span>        args-&gt;notify(mInnerListener);</span><br><span class="line"><span class="number">176</span>        delete args;</span><br><span class="line"><span class="number">177</span>    &#125;</span><br><span class="line"><span class="number">178</span>    mArgsQueue.clear();</span><br><span class="line"><span class="number">179</span>&#125;</span><br></pre></td></tr></table></figure></p>
+<p>而<strong>notify()</strong>函数会调用innnerListener的<strong>notifyKey()</strong>函数,innerListener实际上就是构造InputReader时传入的InputDispatcher,所以调用的就是InputDispatcher的notifyKey()函数<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">62</span><span class="keyword">void</span> NotifyKeyArgs::notify(<span class="keyword">const</span> sp&lt;InputListenerInterface&gt;&amp; listener) <span class="keyword">const</span> &#123;</span><br><span class="line"><span class="number">63</span>    listener-&gt;notifyKey(<span class="keyword">this</span>);</span><br><span class="line"><span class="number">64</span>&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在notifyKey()函数中会新建一个KeyEvent对象并进行初始化,然后调用mPolicy的interceptKeyBeforeQueueing<strong>(</strong>mPolicy就是NativeInputManagers)__<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="number">2548</span>    KeyEvent event;</span><br><span class="line"><span class="number">2549</span>    event.initialize(args-&gt;deviceId, args-&gt;source, args-&gt;action,</span><br><span class="line"><span class="number">2550</span>            flags, keyCode, args-&gt;scanCode, metaState, <span class="number">0</span>,</span><br><span class="line"><span class="number">2551</span>            args-&gt;downTime, args-&gt;eventTime);</span><br><span class="line"><span class="number">2552</span></span><br><span class="line"><span class="number">2553</span>    mPolicy-&gt;interceptKeyBeforeQueueing(&amp;event, <span class="comment">/*byref*/</span> policyFlags);</span><br></pre></td></tr></table></figure></p>
+<p>这里会在c++代码中调用java层的代码,会先把keyEvent转换为jobject对象，然后调用java层对应的interceptBeforeQueueing函数<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">894</span>        jobject keyEventObj = android_view_KeyEvent_fromNative(env, keyEvent);</span><br><span class="line"><span class="number">896</span>        <span class="keyword">if</span> (keyEventObj) &#123;</span><br><span class="line"><span class="number">897</span>            wmActions = env-&gt;CallIntMethod(mServiceObj,</span><br><span class="line"><span class="number">898</span>                    gServiceClassInfo.interceptKeyBeforeQueueing,</span><br><span class="line"><span class="number">899</span>                    keyEventObj, policyFlags);</span><br></pre></td></tr></table></figure></p>
+<p>这里调用了native的interceptKeyBeforeQueueing函数,用到了在初始化时设定的一个windowManager持有的回调.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Native callback.</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">interceptKeyBeforeQueueing</span><span class="params">(KeyEvent event, <span class="keyword">int</span> policyFlags)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> mWindowManagerCallbacks.interceptKeyBeforeQueueing(event, policyFlags);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>通过这个windowManager持有的回调，最终会调用到WindowPhoneManager的interceptKeyBeforeQueueing函数(mpolicy就是windowPhoneManager),这样以来对input的管理最终集中到了windowManager中.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Provides an opportunity for the window manager policy to intercept early key</span><br><span class="line"> * processing as soon as the key has been read from the device. */</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">interceptKeyBeforeQueueing</span><span class="params">(KeyEvent event, <span class="keyword">int</span> policyFlags)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> mService.mPolicy.interceptKeyBeforeQueueing(event, policyFlags);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>input events从java层的<strong><em>windowManagerService</em></strong>的拦截函数返回后,会继续在notify()函数中运行,这里会继续判断是否打开了过滤器开关,如果打开了就对event进行过滤,并返回<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2559</span>        <span class="keyword">if</span> (shouldSendKeyToInputFilterLocked(args)) &#123;</span><br><span class="line"><span class="number">2560</span>            mLock.unlock();</span><br><span class="line"><span class="number">2561</span></span><br><span class="line"><span class="number">2562</span>            policyFlags |= POLICY_FLAG_FILTERED;</span><br><span class="line"><span class="number">2563</span>            <span class="keyword">if</span> (!mPolicy-&gt;filterInputEvent(&amp;event, policyFlags)) &#123;</span><br><span class="line"><span class="number">2564</span>                <span class="keyword">return</span>; <span class="comment">// event was consumed by the filter</span></span><br><span class="line"><span class="number">2565</span>            &#125;</span><br><span class="line"><span class="number">2566</span></span><br><span class="line"><span class="number">2567</span>            mLock.lock();</span><br><span class="line"><span class="number">2568</span>        &#125;</span><br></pre></td></tr></table></figure></p>
+<p>将event信息存储在一个KeyEntry对象中,调用enqueueInboundEventLocked函数并判断是否需要唤醒<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2571</span>        KeyEntry* newEntry = <span class="keyword">new</span> KeyEntry(args-&gt;eventTime,</span><br><span class="line"><span class="number">2572</span>                args-&gt;deviceId, args-&gt;source, policyFlags,</span><br><span class="line"><span class="number">2573</span>                args-&gt;action, flags, keyCode, args-&gt;scanCode,</span><br><span class="line"><span class="number">2574</span>                metaState, repeatCount, args-&gt;downTime);</span><br><span class="line"><span class="number">2575</span></span><br><span class="line"><span class="number">2576</span>        needWake = enqueueInboundEventLocked(newEntry);</span><br></pre></td></tr></table></figure></p>
+<p>之后如果需要唤醒,就会调用<em>mLooper.wake()</em>唤醒分发线程进行事件分发.</p>
+<h3 id="三-分发events到UI窗口"><a href="#三-分发events到UI窗口" class="headerlink" title="三.分发events到UI窗口"></a>三.分发events到UI窗口</h3><p>回到InputDispatcher中分析:<br>mDispatcherThread::threadLoop()方法中会调用<em>dispatchOnce()</em>函数,该函数中主要调用两个方法一个是<br><strong>DispatchOnceInnerLocked()</strong>函数.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">319</span>        <span class="keyword">if</span> (!haveCommandsLocked()) &#123;</span><br><span class="line"><span class="number">320</span>            dispatchOnceInnerLocked(&amp;nextWakeupTime);</span><br><span class="line"><span class="number">321</span>        &#125;</span><br></pre></td></tr></table></figure></p>
+<p>主要会调用到<em>pokeUserActivityLocked()</em>函数<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">394</span>        <span class="comment">// Poke user activity for this event.</span></span><br><span class="line"><span class="number">395</span>        <span class="keyword">if</span> (mPendingEvent-&gt;policyFlags &amp; POLICY_FLAG_PASS_TO_USER) &#123;</span><br><span class="line"><span class="number">396</span>            pokeUserActivityLocked(mPendingEvent);</span><br><span class="line"><span class="number">397</span>        &#125;</span><br></pre></td></tr></table></figure></p>
+<p>在 <em>pokeUserActivityLocked()</em>函数中会将key事件封装成系统需要处理的key事件.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1902</span>    CommandEntry* commandEntry = postCommandLocked(</span><br><span class="line"><span class="number">1903</span>            &amp; InputDispatcher::doPokeUserActivityLockedInterruptible);</span><br><span class="line"><span class="number">1904</span>    commandEntry-&gt;eventTime = eventEntry-&gt;eventTime;</span><br><span class="line"><span class="number">1905</span>    commandEntry-&gt;userActivityEventType = eventType;</span><br></pre></td></tr></table></figure></p>
+<p>在这里会调用 <em>doPokeUserActivityLockedInterruptible</em>函数,函数中会调用NativeInputManager的pokeUserActivity函数<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mPolicy-&gt;pokeUserActivity(commandEntry-&gt;eventTime, commandEntry-&gt;userActivityEventType);</span><br></pre></td></tr></table></figure></p>
+<p>通过JNI调用到java层PowerManagerService中的 <em>userActivityFromNative</em>函数,<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">106</span>        env-&gt;CallVoidMethod(gPowerManagerServiceObj,</span><br><span class="line"><span class="number">107</span>                gPowerManagerServiceClassInfo.userActivityFromNative,</span><br><span class="line"><span class="number">108</span>                nanoseconds_to_milliseconds(eventTime), eventType, <span class="number">0</span>);</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">userActivityInternal</span><span class="params">(<span class="keyword">long</span> eventTime, <span class="keyword">int</span> event, <span class="keyword">int</span> flags, <span class="keyword">int</span> uid)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (mLock) &#123;</span><br><span class="line">        <span class="keyword">if</span> (userActivityNoUpdateLocked(eventTime, event, flags, uid)) &#123;</span><br><span class="line">            updatePowerStateLocked();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>回到<em>dispatchOnceInnerLocked</em>函数之后会对event的类型进行判断,按照event的类型进行不同的操作.<br>首先会调用 <em>findFocusedWindowTargetLocked</em>函数得到要对应的UI窗口<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">875</span>    int32_t injectionResult = findFocusedWindowTargetsLocked(currentTime,</span><br><span class="line"><span class="number">876</span>            entry, inputTargets, nextWakeupTime);</span><br></pre></td></tr></table></figure></p>
+<p>如果是按键事件,会调用dispatchKeyLocked()函数,又会调用dispatchEventLocked()函数：<br>确定对应输出的UI窗口,并得到它们之间的connection.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="number">1029</span>        <span class="keyword">const</span> InputTarget&amp; inputTarget = inputTargets.itemAt(i);</span><br><span class="line"><span class="number">1030</span></span><br><span class="line"><span class="number">1031</span>        ssize_t connectionIndex = getConnectionIndexLocked(inputTarget.inputChannel);</span><br></pre></td></tr></table></figure></p>
+<p>之后会调用_<a href="http://opengrok.rnd.meizu.com/source/s?refs=prepareDispatchCycleLocked&amp;project=M80_base" target="_blank" rel="external">prepareDispatchCycleLocked</a>_函数</p>
+<p>之后会进入到enqueueDispatchEntriesLocked函数中.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1945</span>            enqueueDispatchEntriesLocked(currentTime, connection,</span><br><span class="line"><span class="number">1946</span>                    splitMotionEntry, inputTarget);</span><br><span class="line"><span class="number">1947</span>            splitMotionEntry-&gt;release();</span><br></pre></td></tr></table></figure></p>
+<p>connection中维护一个outboundQueue队列,这个队列中存储input与该window之间的事件.<br>如果队列为空,就开始循环分发.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1974</span>    <span class="comment">// If the outbound queue was previously empty, start the dispatch cycle going.</span></span><br><span class="line"><span class="number">1975</span>    <span class="keyword">if</span> (wasEmpty &amp;&amp; !connection-&gt;outboundQueue.isEmpty()) &#123;</span><br><span class="line"><span class="number">1976</span>        startDispatchCycleLocked(currentTime, connection);</span><br><span class="line"><span class="number">1977</span>    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>在startDisplayCycleLocked函数中：<br>会不断地取出事件进行分发,具体的分发过程利用到了linux的epoll机制,后面有具体分析.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">status = connection-&gt;inputPublisher.publishMotionEvent</span><br></pre></td></tr></table></figure></p>
+<p>操作完成后会释放掉pendingEvent<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">478</span>    <span class="keyword">if</span> (done) &#123;</span><br><span class="line"><span class="number">479</span>        <span class="keyword">if</span> (dropReason != DROP_REASON_NOT_DROPPED) &#123;</span><br><span class="line"><span class="number">480</span>            dropInboundEventLocked(mPendingEvent, dropReason);</span><br><span class="line"><span class="number">481</span>        &#125;</span><br><span class="line"><span class="number">482</span>        mLastDropReason = dropReason;</span><br><span class="line"><span class="number">483</span></span><br><span class="line"><span class="number">484</span>        releasePendingEventLocked();</span><br><span class="line"><span class="number">485</span>        *nextWakeupTime = LONG_LONG_MIN;  <span class="comment">// force next poll to wake up immediately</span></span><br><span class="line"><span class="number">486</span>    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>Looper利用epoll机制接收events,并调用callback回调的handleEvent方法.也就是NativeInputEventReceiver的<em>handleEvent()</em>  方法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">361</span>            <span class="comment">// Invoke the callback.  Note that the file descriptor may be closed by</span></span><br><span class="line"><span class="number">362</span>            <span class="comment">// the callback (and potentially even reused) before the function returns so</span></span><br><span class="line"><span class="number">363</span>            <span class="comment">// we need to be a little careful when removing the file descriptor afterwards.</span></span><br><span class="line"><span class="number">364</span>            <span class="keyword">int</span> callbackResult = response.request.callback-&gt;handleEvent(fd, events, data);</span><br></pre></td></tr></table></figure></p>
+<p>而为什么会调用到这个InputEventReciever呢,InputEventReceiver是在ViewRootImpl中的<em>setView()</em>方法中被声明的,它的构造函数中有两个变量: <em>mInputChannel</em>和 <em>Looper.myLooper()</em><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mInputEventReceiver = <span class="keyword">new</span> WindowInputEventReceiver(mInputChannel,        Looper.myLooper());</span><br></pre></td></tr></table></figure></p>
+<p>而在InputEventReceiver的构造函数中,会先取得主线程的looper对象和client端的java层inputChannel对象,然后调用<em>NativeInit()</em>方法进行初始化.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mInputChannel = inputChannel;</span><br><span class="line">mMessageQueue = looper.getQueue();</span><br><span class="line">mReceiverPtr = nativeInit(<span class="keyword">new</span> WeakReference&lt;InputEventReceiver&gt;(<span class="keyword">this</span>),</span><br><span class="line">        inputChannel, mMessageQueue);</span><br></pre></td></tr></table></figure></p>
+<p>在JNI层,首先获得了inputChannel和messageQueue的指针,并构造一个NativeInputEventReceiver对象.<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">352</span>    sp&lt;InputChannel&gt; inputChannel = android_view_InputChannel_getInputChannel(env,</span><br><span class="line"><span class="number">353</span>            inputChannelObj);</span><br><span class="line"><span class="number">359</span>    sp&lt;MessageQueue&gt; messageQueue = android_os_MessageQueue_getMessageQueue(env, messageQueueObj);</span><br><span class="line"><span class="number">365</span>    sp&lt;NativeInputEventReceiver&gt; receiver = <span class="keyword">new</span> NativeInputEventReceiver(env,</span><br><span class="line"><span class="number">366</span>            receiverWeak, inputChannel, messageQueue);</span><br></pre></td></tr></table></figure></p>
+<p>之后会调用receiver的<em>initialize()</em>方法.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">122</span>status_t NativeInputEventReceiver::initialize() &#123;</span><br><span class="line"><span class="number">123</span>    setFdEvents(ALOOPER_EVENT_INPUT);</span><br><span class="line"><span class="number">124</span>    <span class="keyword">return</span> OK;</span><br><span class="line"><span class="number">125</span>&#125;</span><br></pre></td></tr></table></figure></p>
+<p><em>setFdEvents</em>函数中,会将client端的inputChannel的socket文件描述符加入到Looper的监控中.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">162</span><span class="keyword">void</span> NativeInputEventReceiver::setFdEvents(<span class="keyword">int</span> events) &#123;</span><br><span class="line"><span class="number">163</span>    <span class="keyword">if</span> (mFdEvents != events) &#123;</span><br><span class="line"><span class="number">164</span>        mFdEvents = events;</span><br><span class="line"><span class="number">165</span>        <span class="keyword">int</span> fd = mInputConsumer.getChannel()-&gt;getFd();</span><br><span class="line"><span class="number">166</span>        <span class="keyword">if</span> (events) &#123;</span><br><span class="line"><span class="number">167</span>            mMessageQueue-&gt;getLooper()-&gt;addFd(fd, <span class="number">0</span>, events, <span class="keyword">this</span>, NULL);</span><br><span class="line"><span class="number">168</span>        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line"><span class="number">169</span>            mMessageQueue-&gt;getLooper()-&gt;removeFd(fd);</span><br><span class="line"><span class="number">170</span>        &#125;</span><br><span class="line"><span class="number">171</span>    &#125;</span><br><span class="line"><span class="number">172</span>&#125;</span><br><span class="line"><span class="number">173</span></span><br></pre></td></tr></table></figure></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1254064-55e7e4d403f9bd67.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="InitInputChannel.jpg"></p>
+<p>当有消息到来的时候,会调用inputChannel对应的<em>NativeInputEventReceiver</em>回调函数.<br>它的<em>handleEvent()</em>函数中会调用consumeEvents函数,<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">status_t status = consumeEvents(env, <span class="keyword">false</span> <span class="comment">/*consumeBatches*/</span>, -<span class="number">1</span>, NULL);</span><br></pre></td></tr></table></figure></p>
+<p>在 <em>consumeEvents()</em>函数中会调用到InputChannel的<em>receiveMessage</em>方法.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">493</span>            <span class="comment">// Receive a fresh message.</span></span><br><span class="line"><span class="number">494</span>            status_t result = mChannel-&gt;receiveMessage(&amp;mMsg);</span><br></pre></td></tr></table></figure></p>
+<p>然后通过JNI调用到java层InputEventReceiver的<em>dispatchInputEvent()</em>回调函数.<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">330</span> env-&gt;CallVoidMethod(receiverObj.get(),<span class="number">331</span> gInputEventReceiverClassInfo.dispatchInputEvent, seq, inputEventObj);</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">dispatchInputEvent</span><span class="params">(<span class="keyword">int</span> seq, InputEvent event)</span> </span>&#123;</span><br><span class="line">    mSeqMap.put(event.getSequenceNumber(), seq);</span><br><span class="line">    onInputEvent(event);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后调用到ViewRoot的<em>OnInputEvent()</em>方法,继而调用了<em>enqueuInputEvent()</em>方法,<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (processImmediately) &#123;</span><br><span class="line">    doProcessInputEvents();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    scheduleProcessInputEvents();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>之后进入到<em>delieverInputEvent()</em>方法中,对stage进行判断,如果为空则结束分发,否则<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">if</span> (stage != <span class="keyword">null</span>) &#123;</span><br><span class="line">    stage.deliver(q);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    finishInputEvent(q);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><em>deliver()</em>函数中会执行stage的onPorcess()方法.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apply(q, onProcess(q));</span><br></pre></td></tr></table></figure></p>
+<p>这里的stage时这样取值的<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (q.shouldSendToSynthesizer()) &#123;</span><br><span class="line">    stage = mSyntheticInputStage;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    stage = q.shouldSkipIme() ? mFirstPostImeInputStage : mFirstInputStage;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里InputStage的设计用到了流水线或者叫 </p>
+<h3 id="责任链的模式"><a href="#责任链的模式" class="headerlink" title="责任链的模式"></a>责任链的模式</h3><p><img src="http://upload-images.jianshu.io/upload_images/1254064-6564535b5aa60550.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="InputStage结构.jpg"></p>
+<p>InputStage有很多子类,所有InputStage类的构造方法都会传入一个InputStage类的变量,这样最终会形成流水线线式的处理结构,每经过一个InputStage对象的处理都会进行判断,看是否还需要将 events继续向前传输,如果需要就调用<em>forward()</em>函数让该变量中存储的下一个InputStage对象处理该events,如果不需要就调用<em>finish()</em>函数结束events的传输.<br>只需知道最终会调用到ViewRootImpl的<em>enqueueInputEvent()</em>方法.<br>该方法中会立即或者延迟处理events.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (processImmediately) &#123;</span><br><span class="line">    doProcessInputEvents();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    scheduleProcessInputEvents();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在　<em>doProcessInputEvent()</em>方法中会判断是否要经过IME输入法框架处理.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">stage = q.shouldSkipIme() ? mFirstPostImeInputStage : mFirstInputStage;</span><br></pre></td></tr></table></figure></p>
+<p>最后经过判断后会层层处理,最终进入到<em>view.dispatchKeyEvent()</em>方法中.</p>
+<h3 id="四"><a href="#四" class="headerlink" title="四."></a>四.</h3><p>最后返回到<em>dispatchOnceLocked()</em>函数中,执行<em>runCommandsLockedInterruptible()</em>函数.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">323</span>        <span class="comment">// Run all pending commands if there are any.</span></span><br><span class="line"><span class="number">324</span>        <span class="comment">// If any commands were run then force the next poll to wake up immediately.</span></span><br><span class="line"><span class="number">325</span>        <span class="keyword">if</span> (runCommandsLockedInterruptible()) &#123;</span><br><span class="line"><span class="number">326</span>            nextWakeupTime = LONG_LONG_MIN;</span><br><span class="line"><span class="number">327</span>        &#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="五-Epoll机制"><a href="#五-Epoll机制" class="headerlink" title="五.Epoll机制"></a>五.Epoll机制</h3><p><img src="http://upload-images.jianshu.io/upload_images/1254064-b6501417ab4d6716.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="epoll.jpg"><br>Looper-&gt;wake()函数利用了linux中的epoll机制。<br>首先,注册一个epoll的实例描述符,将所有的管道对象的fd都注册到该epoll实例上,利用epoll_wait函数来睡眠等待管道上IO事件的发生;<br>调用PollOnce()函数来启动epoll_wait的睡眠等待,而wake()函数则是向epoll中的管道写入一个字符来唤醒epoll_wait.</p>
+<p>###六.InputChannel分析<br><img src="http://upload-images.jianshu.io/upload_images/1254064-da3e5a28868cc359?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1254064-a0d41cab68b60cdb.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="InputChannel结构.jpeg"></p>
+<ul>
+<li><h4 id="首先是server端的inputChannel注册"><a href="#首先是server端的inputChannel注册" class="headerlink" title="首先是server端的inputChannel注册"></a>首先是server端的inputChannel注册</h4></li>
+<li><p>首先打开一对InputChannelPair，调用到JNI中的<br> <a href="http://opengrok.rnd.meizu.com/source/s?refs=android_view_InputChannel_nativeOpenInputChannelPair&amp;project=M80_base" target="_blank" rel="external">android_view_InputChannel_nativeOpenInputChannelPair</a>方法,最终会调用到linux中的<em>socketPair()</em>函数打开一对socket管道,而inputChannel就是由socket管道来构建的.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">184</span> outServerChannel = **<span class="keyword">new</span>** InputChannel(serverChannelName, sockets[<span class="number">0</span>]);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>inputChannel在WMS中注册,保存在一个WindowState的类中,WMS使用这对inputChannel的第一个</p>
+</li>
+<li><p>然后会调用<em>registerInputChannel</em>方法进行注册.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mInputManager.registerInputChannel(win.mInputChannel, win.mInputWindowHandle);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>最终会调用Native层的方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nativeRegisterInputChannel(mPtr, inputChannel, inputWindowHandle, <span class="keyword">false</span>);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>将inputChannel和connection保存在映射表中,mLooper加入对该fd的监听,当有数据到来的时候会唤醒等待的线程.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">3511        sp&lt;Connection&gt; connection = new Connection(inputChannel, inputWindowHandle, monitor);</span><br><span class="line">3512</span><br><span class="line">3513        int fd = inputChannel-&gt;getFd();</span><br><span class="line">3514        mConnectionsByFd.add(fd, connection);</span><br><span class="line">3516        if (monitor) &#123;</span><br><span class="line">3517            mMonitoringChannels.push(inputChannel);</span><br><span class="line">3518        &#125;</span><br><span class="line">3519</span><br><span class="line">3520        mLooper-&gt;addFd(fd, 0, ALOOPER_EVENT_INPUT, handleReceiveCallback, this);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>而当InputDispatcher分发消息时,会调用<em>InputChannel::sendMessage()</em>方法,该方法调用了linux socket中的send函数,向socket管道中写入数据.</li>
+</ul>
+<h3 id="client端inputChannel的注册"><a href="#client端inputChannel的注册" class="headerlink" title="client端inputChannel的注册"></a>client端inputChannel的注册</h3><p>WMS中创建的inputChannel跨进程传输到cilent端,转换为client端的inputChannel使用.</p>
+<p>讲解java JNI的注册:<a href="http://my.oschina.net/u/157503/blog/" target="_blank" rel="external">http://my.oschina.net/u/157503/blog/</a></p>
+
+
+                
+            </div>
+
+            <!-- Comments -->
+            
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    
+
+
+                </div>
+            
+        </div>
+    </div>
+</article>
+
+    <!-- Footer -->
+    <hr />
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+
+                    
+
+                    
+
+                    
+
+                    
+
+                    
+                </ul>
+                <p class="copyright text-muted">Original Theme <a target="_blank" href="http://startbootstrap.com/template-overviews/clean-blog/">Clean Blog</a> from <a href="http://startbootstrap.com/" target="_blank">Start Bootstrap</a></p>
+                <p class="copyright text-muted">Adapted for <a target="_blank" href="https://hexo.io/">Hexo</a> by <a href="http://www.codeblocq.com/" target="_blank">Jonathan Klughertz</a></p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+    <!-- After footer scripts -->
+    
+<!-- jQuery -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<!-- Gallery -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/featherlight/1.3.5/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Disqus Comments -->
+
+
+
+</body>
+
+</html>
