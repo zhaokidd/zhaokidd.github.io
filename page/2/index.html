@@ -68,6 +68,70 @@
       <div class="outer">
         <section id="main">
   
+    l<article id="post-EventBus初探" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/04/12/EventBus初探/" class="article-date">
+  <time datetime="2016-04-12T10:01:59.000Z" itemprop="datePublished">2016-04-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/04/12/EventBus初探/">EventBus初探</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="EventBus学习记录"><a href="#EventBus学习记录" class="headerlink" title="EventBus学习记录"></a>EventBus学习记录</h3><ul>
+<li><h4 id="EventBus的使用的步骤"><a href="#EventBus的使用的步骤" class="headerlink" title="EventBus的使用的步骤"></a>EventBus的使用的步骤</h4><ol>
+<li><p>EventBus在JCenter和Maven Central中都是可用的,所以可以直接在gradle构建文件中进行添加<code>compile&#39;org.greenrobot:eventbus:3.0.0&#39;</code></p>
+</li>
+<li><p>定义一个event类,例如 <strong>MessageEvent</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MessageEvent</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">final</span> String message;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MessageEvent</span><span class="params">(String messa</span><br><span class="line">        <span class="keyword">this</span>.message = message;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span></span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在subscriber（订阅者）中声明处理Event的回调函数:例如处理MessageEvent对象就声明一个<em>onMessageEvent()</em>回调函数,并在函数前面加上<strong>@subscribe</strong>注解.</p>
+</li>
+<li>在activity或service等组件的生命周期回调函数上加入注册和解注册的逻辑.    <code>EventBUs.getDefault().register(this);</code><br><code>EventBus.getDefault().unregister(this);</code></li>
+<li>在代码的任何位置post event对象.<br><code>EventBus.getDefault.post(new MessageEvent())</code></li>
+</ol>
+</li>
+</ul>
+<h4 id="EventBus的几种处理模式"><a href="#EventBus的几种处理模式" class="headerlink" title="EventBus的几种处理模式:"></a>EventBus的几种处理模式:</h4><ul>
+<li><h5 id="postThread-默认模式-在post所在的线程直接调用订阅者的事件响应方法-不论该线程为什么线程"><a href="#postThread-默认模式-在post所在的线程直接调用订阅者的事件响应方法-不论该线程为什么线程" class="headerlink" title="postThread:默认模式,在post所在的线程直接调用订阅者的事件响应方法,不论该线程为什么线程."></a>postThread:默认模式,在post所在的线程直接调用订阅者的事件响应方法,不论该线程为什么线程.</h5></li>
+<li><h5 id="MainThread-在主线程中响应-如果发布线程即为主线程-则直接调用订阅者的事件响应函数-否则通过主线程的Handle-post回主线程中执行"><a href="#MainThread-在主线程中响应-如果发布线程即为主线程-则直接调用订阅者的事件响应函数-否则通过主线程的Handle-post回主线程中执行" class="headerlink" title="MainThread: 在主线程中响应,如果发布线程即为主线程,则直接调用订阅者的事件响应函数,否则通过主线程的Handle post回主线程中执行."></a>MainThread: 在主线程中响应,如果发布线程即为主线程,则直接调用订阅者的事件响应函数,否则通过主线程的Handle post回主线程中执行.</h5></li>
+<li><h5 id="AsyncThrad-EventBus在初始化的时候会新建一个-CachedThreadPool-exuecteService-在-async模式下会使用该线程池来处理event"><a href="#AsyncThrad-EventBus在初始化的时候会新建一个-CachedThreadPool-exuecteService-在-async模式下会使用该线程池来处理event" class="headerlink" title="AsyncThrad:  EventBus在初始化的时候会新建一个 CachedThreadPool exuecteService,在 async模式下会使用该线程池来处理event."></a>AsyncThrad:  EventBus在初始化的时候会新建一个 <strong>CachedThreadPool</strong> exuecteService,在 async模式下会使用该线程池来处理event.</h5></li>
+<li><h5 id="BackGroundThread-同样使用线程池来对event进行处理-但与async模式不同的地方在于-在background模式下每次只有一个线程能执行任务-而async模式下所有线程都是并发执行的-源码分析如下"><a href="#BackGroundThread-同样使用线程池来对event进行处理-但与async模式不同的地方在于-在background模式下每次只有一个线程能执行任务-而async模式下所有线程都是并发执行的-源码分析如下" class="headerlink" title="BackGroundThread:同样使用线程池来对event进行处理,但与async模式不同的地方在于:在background模式下每次只有一个线程能执行任务,而async模式下所有线程都是并发执行的.(源码分析如下)"></a>BackGroundThread:同样使用线程池来对event进行处理,但与async模式不同的地方在于:在background模式下每次只有一个线程能执行任务,而async模式下所有线程都是并发执行的.(源码分析如下)</h5></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">enqueue</span><span class="params">(Subscription subscription, Object event)</span> </span>&#123;</span><br><span class="line">    PendingPost pendingPost = PendingPost.obtainPendingPost(subscription, event);</span><br><span class="line">    <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</span><br><span class="line">        queue.enqueue(pendingPost);</span><br><span class="line">        <span class="keyword">if</span> (!executorRunning) &#123;</span><br><span class="line">            executorRunning = <span class="keyword">true</span>;</span><br><span class="line">            eventBus.getExecutorService().execute(<span class="keyword">this</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">       <span class="keyword">try</span> &#123;</span><br><span class="line">           <span class="keyword">try</span> &#123;</span><br><span class="line">               <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">               <span class="comment">//这里有一个一秒的延时处理,可能是为了减少线程的切换,减少耗时.</span></span><br><span class="line">                   PendingPost pendingPost = queue.poll(<span class="number">1000</span>);</span><br><span class="line">                   <span class="keyword">if</span> (pendingPost == <span class="keyword">null</span>) &#123;</span><br><span class="line">                       <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</span><br><span class="line">                           <span class="comment">// Check again, this time in synchronized</span></span><br><span class="line">                           pendingPost = queue.poll();</span><br><span class="line">                           <span class="keyword">if</span> (pendingPost == <span class="keyword">null</span>) &#123;</span><br><span class="line">                           <span class="comment">//在这里把exeuctorRunning标志位置为false,这里下一次enqueue的时候不会新开线程进行处理.</span></span><br><span class="line">                               executorRunning = <span class="keyword">false</span>;</span><br><span class="line">                               <span class="keyword">return</span>;</span><br><span class="line">                           &#125;</span><br><span class="line">                       &#125;</span><br><span class="line">                   &#125;</span><br><span class="line">                   eventBus.invokeSubscriber(pendingPost);</span><br><span class="line">               &#125;</span><br><span class="line">           &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">               Log.w(<span class="string">"Event"</span>, Thread.currentThread().getName() + <span class="string">" was interruppted"</span>, e);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">       <span class="comment">//退出的时候置为false,下一次才会正常进行处理.</span></span><br><span class="line">           executorRunning = <span class="keyword">false</span>;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="EventBus架构有什么好处"><a href="#EventBus架构有什么好处" class="headerlink" title="EventBus架构有什么好处:"></a>EventBus架构有什么好处:</h4><ul>
+<li><h5 id="实现了消息发送者和接受者间逻辑的解耦"><a href="#实现了消息发送者和接受者间逻辑的解耦" class="headerlink" title="实现了消息发送者和接受者间逻辑的解耦"></a>实现了消息发送者和接受者间逻辑的解耦</h5></li>
+<li><h5 id="提供了对消息事件的多线程处理"><a href="#提供了对消息事件的多线程处理" class="headerlink" title="提供了对消息事件的多线程处理."></a>提供了对消息事件的多线程处理.</h5></li>
+<li><h5 id="还有很多-暂时没有体会到………"><a href="#还有很多-暂时没有体会到………" class="headerlink" title="还有很多,暂时没有体会到………"></a>还有很多,暂时没有体会到………</h5></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/12/EventBus初探/" data-id="cis63x2m80007icp93gfv95p8" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+  
+
+  
     l<article id="post-4-7工作学习记录" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2016/04/07/4-7工作学习记录/" class="article-date">
@@ -108,7 +172,7 @@ __RemoteCallbackList__
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/07/4-7工作学习记录/" data-id="cis1ivghf0004fjp9iodh7954" class="article-share-link">Share</a>
+      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/07/4-7工作学习记录/" data-id="cis63x2m20003icp9ix6chj58" class="article-share-link">Share</a>
       
       
     </footer>
@@ -147,7 +211,7 @@ __RemoteCallbackList__
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/06/4-6学习笔记/" data-id="cis1ivghe0003fjp9mt82xubp" class="article-share-link">Share</a>
+      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/06/4-6学习笔记/" data-id="cis63x2m00002icp9qqkqfdl9" class="article-share-link">Share</a>
       
       
     </footer>
@@ -189,7 +253,7 @@ __RemoteCallbackList__
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/05/4-5学习笔记/" data-id="cis1ivghc0002fjp9gowuq2ya" class="article-share-link">Share</a>
+      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/05/4-5学习笔记/" data-id="cis63x2md0009icp92siujkkf" class="article-share-link">Share</a>
       
       
     </footer>
@@ -234,6 +298,10 @@ __RemoteCallbackList__
       <ul>
         
           <li>
+            <a href="/2016/08/22/Android爬虫-爬取V2ex职位信息/">Android爬虫-爬取V2ex职位信息</a>
+          </li>
+        
+          <li>
             <a href="/2016/08/19/AsyncTask的一些分析/">AsyncTask的一些分析</a>
           </li>
         
@@ -247,10 +315,6 @@ __RemoteCallbackList__
         
           <li>
             <a href="/2016/07/06/WeakHanlder分析/">WeakHanlder分析</a>
-          </li>
-        
-          <li>
-            <a href="/2016/07/06/CherryPick和几个关于git的问题总结/">CherryPick和几个关于git的问题总结</a>
           </li>
         
       </ul>

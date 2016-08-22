@@ -3,27 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>4-14问题记录 | 赵阳的blog</title>
+  <title>Android爬虫-爬取V2ex职位信息 | 赵阳的blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="4-14工作及学习记录
-今天主要在解一个bug:在EmptyDialog这个Activity类启动dialog的时候,点击确定按钮后没有弹出新的对话框,原因是前一个dialog还没有小毁掉就启动了相同的Activity.解决方法是在第二次调用EmptyDialog这个Activity的时候利用handler延迟了启动,使得activity销毁后再重新建立.
-
-问题记录:写了一个shell脚本打算通">
+  <meta name="description" content="https://github.com/zhaokidd/JobInfoCrawler自己写了爬取V2ex上职位信息的小爬虫程序,作为最近的练手程序,界面非常丑陋，几乎没有什么UI,使用了JSOUP+ASYNCTASK+CONSTRAINTLAYOUT,目前的功能有爬取指定页数的职位信息.欢迎看到的朋友们(虽然没什么人能看到….)fork star 评论!我的小尾巴: 爱情不过是生活的屁.  i w">
 <meta property="og:type" content="article">
-<meta property="og:title" content="4-14问题记录">
-<meta property="og:url" content="http://blog.zhaoyang.meizu.com/2016/04/14/4-14问题记录/index.html">
+<meta property="og:title" content="Android爬虫-爬取V2ex职位信息">
+<meta property="og:url" content="http://blog.zhaoyang.meizu.com/2016/08/22/Android爬虫-爬取V2ex职位信息/index.html">
 <meta property="og:site_name" content="赵阳的blog">
-<meta property="og:description" content="4-14工作及学习记录
-今天主要在解一个bug:在EmptyDialog这个Activity类启动dialog的时候,点击确定按钮后没有弹出新的对话框,原因是前一个dialog还没有小毁掉就启动了相同的Activity.解决方法是在第二次调用EmptyDialog这个Activity的时候利用handler延迟了启动,使得activity销毁后再重新建立.
-
-问题记录:写了一个shell脚本打算通">
-<meta property="og:updated_time" content="2016-04-14T12:59:25.551Z">
+<meta property="og:description" content="https://github.com/zhaokidd/JobInfoCrawler自己写了爬取V2ex上职位信息的小爬虫程序,作为最近的练手程序,界面非常丑陋，几乎没有什么UI,使用了JSOUP+ASYNCTASK+CONSTRAINTLAYOUT,目前的功能有爬取指定页数的职位信息.欢迎看到的朋友们(虽然没什么人能看到….)fork star 评论!我的小尾巴: 爱情不过是生活的屁.  i w">
+<meta property="og:updated_time" content="2016-08-22T13:57:05.883Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="4-14问题记录">
-<meta name="twitter:description" content="4-14工作及学习记录
-今天主要在解一个bug:在EmptyDialog这个Activity类启动dialog的时候,点击确定按钮后没有弹出新的对话框,原因是前一个dialog还没有小毁掉就启动了相同的Activity.解决方法是在第二次调用EmptyDialog这个Activity的时候利用handler延迟了启动,使得activity销毁后再重新建立.
-
-问题记录:写了一个shell脚本打算通">
+<meta name="twitter:title" content="Android爬虫-爬取V2ex职位信息">
+<meta name="twitter:description" content="https://github.com/zhaokidd/JobInfoCrawler自己写了爬取V2ex上职位信息的小爬虫程序,作为最近的练手程序,界面非常丑陋，几乎没有什么UI,使用了JSOUP+ASYNCTASK+CONSTRAINTLAYOUT,目前的功能有爬取指定页数的职位信息.欢迎看到的朋友们(虽然没什么人能看到….)fork star 评论!我的小尾巴: 爱情不过是生活的屁.  i w">
   
     <link rel="alternate" href="/atom.xml" title="赵阳的blog" type="application/atom+xml">
   
@@ -76,10 +67,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">l<article id="post-4-14问题记录" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main">l<article id="post-Android爬虫-爬取V2ex职位信息" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2016/04/14/4-14问题记录/" class="article-date">
-  <time datetime="2016-04-14T12:47:09.000Z" itemprop="datePublished">2016-04-14</time>
+    <a href="/2016/08/22/Android爬虫-爬取V2ex职位信息/" class="article-date">
+  <time datetime="2016-08-22T13:34:51.000Z" itemprop="datePublished">2016-08-22</time>
 </a>
     
   </div>
@@ -90,7 +81,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      4-14问题记录
+      Android爬虫-爬取V2ex职位信息
     </h1>
   
 
@@ -98,15 +89,12 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="4-14工作及学习记录"><a href="#4-14工作及学习记录" class="headerlink" title="4-14工作及学习记录"></a>4-14工作及学习记录</h3><ul>
-<li><h4 id="今天主要在解一个bug"><a href="#今天主要在解一个bug" class="headerlink" title="今天主要在解一个bug:"></a>今天主要在解一个bug:</h4>在EmptyDialog这个Activity类启动dialog的时候,点击确定按钮后没有弹出新的对话框,原因是前一个dialog还没有小毁掉就启动了相同的Activity.<br>解决方法是在第二次调用EmptyDialog这个Activity的时候利用handler延迟了启动,使得activity销毁后再重新建立.</li>
-</ul>
-<h3 id="问题记录"><a href="#问题记录" class="headerlink" title="问题记录:"></a>问题记录:</h3><h5 id="写了一个shell脚本打算通过adb-push到手机中-通过远程shell一直无法执行这个sh文件-已经获得root权限并且该文件也具有可执行权限-但是执行的时候仍然提示错误-No-Such-File-Or-Directory"><a href="#写了一个shell脚本打算通过adb-push到手机中-通过远程shell一直无法执行这个sh文件-已经获得root权限并且该文件也具有可执行权限-但是执行的时候仍然提示错误-No-Such-File-Or-Directory" class="headerlink" title="写了一个shell脚本打算通过adb push到手机中,通过远程shell一直无法执行这个sh文件.已经获得root权限并且该文件也具有可执行权限,但是执行的时候仍然提示错误 : No Such File Or Directory!"></a>写了一个shell脚本打算通过adb push到手机中,通过远程shell一直无法执行这个sh文件.已经获得root权限并且该文件也具有可执行权限,但是执行的时候仍然提示错误 : No Such File Or Directory!</h5><p>目前还不知道为什么.<br>替代方法是:在sh脚本文件中的shell命令之前加上 adb shell.不登陆远程shell来执行命令.<strong>但是以后可能会有需要将sh文件放入到手机中来执行的情况</strong>,</p>
+        <h2 id="https-github-com-zhaokidd-JobInfoCrawler"><a href="#https-github-com-zhaokidd-JobInfoCrawler" class="headerlink" title="https://github.com/zhaokidd/JobInfoCrawler"></a><a href="https://github.com/zhaokidd/JobInfoCrawler" target="_blank" rel="external">https://github.com/zhaokidd/JobInfoCrawler</a></h2><h5 id="自己写了爬取V2ex上职位信息的小爬虫程序-作为最近的练手程序-界面非常丑陋，几乎没有什么UI-使用了JSOUP-ASYNCTASK-CONSTRAINTLAYOUT-目前的功能有爬取指定页数的职位信息"><a href="#自己写了爬取V2ex上职位信息的小爬虫程序-作为最近的练手程序-界面非常丑陋，几乎没有什么UI-使用了JSOUP-ASYNCTASK-CONSTRAINTLAYOUT-目前的功能有爬取指定页数的职位信息" class="headerlink" title="自己写了爬取V2ex上职位信息的小爬虫程序,作为最近的练手程序,界面非常丑陋，几乎没有什么UI,使用了JSOUP+ASYNCTASK+CONSTRAINTLAYOUT,目前的功能有爬取指定页数的职位信息."></a>自己写了爬取V2ex上职位信息的小爬虫程序,作为最近的练手程序,界面非常丑陋，几乎没有什么UI,使用了JSOUP+ASYNCTASK+CONSTRAINTLAYOUT,目前的功能有爬取指定页数的职位信息.</h5><h6 id="欢迎看到的朋友们-虽然没什么人能看到…-fork-star-评论"><a href="#欢迎看到的朋友们-虽然没什么人能看到…-fork-star-评论" class="headerlink" title="欢迎看到的朋友们(虽然没什么人能看到….)fork star 评论!"></a>欢迎看到的朋友们(虽然没什么人能看到….)fork star 评论!</h6><p>我的小尾巴: 爱情不过是生活的屁.  i wanna money money money ….</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/14/4-14问题记录/" data-id="cis63x2m90008icp9rcptgwjq" class="article-share-link">Share</a>
+      <a data-url="http://blog.zhaoyang.meizu.com/2016/08/22/Android爬虫-爬取V2ex职位信息/" data-id="cis63x2lt0000icp9kexqgn3e" class="article-share-link">Share</a>
       
       
     </footer>
@@ -115,19 +103,10 @@
     
 <nav id="article-nav">
   
-    <a href="/2016/04/15/AndroidDataBinding学习/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          AndroidDataBinding学习
-        
-      </div>
-    </a>
   
-  
-    <a href="/2016/04/12/EventBus初探/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2016/08/19/AsyncTask的一些分析/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">EventBus初探</div>
+      <div class="article-nav-title">AsyncTask的一些分析</div>
     </a>
   
 </nav>
@@ -138,7 +117,7 @@
   
   <section id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-4-14问题记录" data-title="4-14问题记录" data-url="http://blog.zhaoyang.meizu.com/2016/04/14/4-14问题记录/"></div>
+    <div class="ds-thread" data-thread-key="post-Android爬虫-爬取V2ex职位信息" data-title="Android爬虫-爬取V2ex职位信息" data-url="http://blog.zhaoyang.meizu.com/2016/08/22/Android爬虫-爬取V2ex职位信息/"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
