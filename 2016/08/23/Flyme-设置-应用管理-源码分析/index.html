@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Flyme-设置-应用管理-源码分析 | 赵阳的blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="设置-应用管理-学习笔记源码文件 —— ManageApplications.javaUserManager的入门UserManager的创建UserManagerService是在PackageManagerService的构造方法中创建的，而UserManagerService有两个构造函数，其中一个构造函数会调用另外一个构造函数.
+123456789101112131415161718192">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flyme-设置-应用管理-源码分析">
+<meta property="og:url" content="http://blog.zhaoyang.meizu.com/2016/08/23/Flyme-设置-应用管理-源码分析/index.html">
+<meta property="og:site_name" content="赵阳的blog">
+<meta property="og:description" content="设置-应用管理-学习笔记源码文件 —— ManageApplications.javaUserManager的入门UserManager的创建UserManagerService是在PackageManagerService的构造方法中创建的，而UserManagerService有两个构造函数，其中一个构造函数会调用另外一个构造函数.
+123456789101112131415161718192">
+<meta property="og:updated_time" content="2016-08-23T11:32:37.352Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Flyme-设置-应用管理-源码分析">
+<meta name="twitter:description" content="设置-应用管理-学习笔记源码文件 —— ManageApplications.javaUserManager的入门UserManager的创建UserManagerService是在PackageManagerService的构造方法中创建的，而UserManagerService有两个构造函数，其中一个构造函数会调用另外一个构造函数.
+123456789101112131415161718192">
+  
+    <link rel="alternate" href="/atom.xml" title="赵阳的blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">赵阳的blog</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Read &amp;&amp; Type The Fucking SourceCode.</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://blog.zhaoyang.meizu.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">l<article id="post-Flyme-设置-应用管理-源码分析" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/08/23/Flyme-设置-应用管理-源码分析/" class="article-date">
+  <time datetime="2016-08-23T07:53:15.000Z" itemprop="datePublished">2016-08-23</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Flyme-设置-应用管理-源码分析
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="设置-应用管理-学习笔记"><a href="#设置-应用管理-学习笔记" class="headerlink" title="设置-应用管理-学习笔记"></a>设置-应用管理-学习笔记</h2><h3 id="源码文件-——-ManageApplications-java"><a href="#源码文件-——-ManageApplications-java" class="headerlink" title="源码文件 —— ManageApplications.java"></a>源码文件 —— ManageApplications.java</h3><h4 id="UserManager的入门"><a href="#UserManager的入门" class="headerlink" title="UserManager的入门"></a>UserManager的入门</h4><h5 id="UserManager的创建"><a href="#UserManager的创建" class="headerlink" title="UserManager的创建"></a>UserManager的创建</h5><p>UserManagerService是在PackageManagerService的构造方法中创建的，而UserManagerService有两个构造函数，其中一个构造函数会调用另外一个构造函数.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="title">UserManagerService</span><span class="params">(Context context, PackageManagerService pm,</span><br><span class="line">        Object installLock, Object packagesLock,</span><br><span class="line">        File dataDir, File baseUserPath)</span> </span>&#123;</span><br><span class="line">    mContext = context;</span><br><span class="line">    mPm = pm;</span><br><span class="line">    mInstallLock = installLock;</span><br><span class="line">    mPackagesLock = packagesLock;</span><br><span class="line">    mHandler = <span class="keyword">new</span> MainHandler();</span><br><span class="line">    <span class="keyword">synchronized</span> (mInstallLock) &#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (mPackagesLock) &#123;</span><br><span class="line">            mUsersDir = <span class="keyword">new</span> File(dataDir, USER_INFO_DIR);</span><br><span class="line">            mUsersDir.mkdirs();</span><br><span class="line">            <span class="comment">// Make zeroth user directory, for services to migrate their files to that location</span></span><br><span class="line">            File userZeroDir = <span class="keyword">new</span> File(mUsersDir, <span class="string">"0"</span>);</span><br><span class="line">            userZeroDir.mkdirs();</span><br><span class="line">            FileUtils.setPermissions(mUsersDir.toString(),</span><br><span class="line">                    FileUtils.S_IRWXU|FileUtils.S_IRWXG</span><br><span class="line">                    |FileUtils.S_IROTH|FileUtils.S_IXOTH,</span><br><span class="line">                    -<span class="number">1</span>, -<span class="number">1</span>);</span><br><span class="line">            mUserListFile = <span class="keyword">new</span> File(mUsersDir, USER_LIST_FILENAME);</span><br><span class="line">            initDefaultGuestRestrictions();</span><br><span class="line">            readUserListLocked();</span><br><span class="line">            sInstance = <span class="keyword">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在构造函数中会创建两个路径，一个是 <strong>/data/system/users</strong>,另外一个是<strong>/data/system/users/0</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">readUserListLocked();</span><br></pre></td></tr></table></figure>
+<p>接着会调用<strong>readUserListLocked()</strong>方法，这个方法从/data/system/users/userlist.xml文件中读取<strong>id</strong>值<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mUserListFile = <span class="keyword">new</span> File(mUsersDir, USER_LIST_FILENAME);</span><br></pre></td></tr></table></figure></p>
+<p>UserManagerService添加用户:<br><strong>createUser()</strong>方法,调用<strong>createUserInternal()</strong>方法。</p>
+<ul>
+<li>首先会检查进程所属用户是否被限制添加用户。</li>
+<li>在非访客模式，非用户资料，用户数量没有达到限制的情况下才能继续。</li>
+<li>会调用<strong>getNextAvailableIdLocked()</strong>方法得到下一个可用的userid.</li>
+<li>构建一个新的UserInfo对象，创建该用户对应的目录,并存储该userinfo对象。</li>
+<li>将新建的user号码写入 /data/system/users/userlist.xml</li>
+<li>做一些存储相关的准备工作.</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.zhaoyang.meizu.com/2016/08/23/Flyme-设置-应用管理-源码分析/" data-id="cis7irz0w000008p9ee4n6h3m" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/08/22/Android爬虫-爬取V2ex职位信息/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Android爬虫-爬取V2ex职位信息</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+  
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-Flyme-设置-应用管理-源码分析" data-title="Flyme-设置-应用管理-源码分析" data-url="http://blog.zhaoyang.meizu.com/2016/08/23/Flyme-设置-应用管理-源码分析/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'zhaokidd'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+  
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/08/23/Flyme-设置-应用管理-源码分析/">Flyme-设置-应用管理-源码分析</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/22/Android爬虫-爬取V2ex职位信息/">Android爬虫-爬取V2ex职位信息</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/19/AsyncTask的一些分析/">AsyncTask的一些分析</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/27/MzUpdate-DownloadCommon库分析/">MzUpdate-DownloadCommon库分析</a>
+          </li>
+        
+          <li>
+            <a href="/2016/07/17/shell脚本删除空目录/">shell脚本删除空目录</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    <div class="widget tag">
+<h3 class="title">诚意满满的友情链接</h3>
+<ul class="entry"> 
+<li><a href="http://hoyoung.net" title="胡总的 Blog">HuYoung!</a></li>
+<li><a href="http://blog.mtxcxin.cn" title="鹏总的 Blog">MTXC_YP!</a></li>
+<li><a href="http://blog.csdn.net/liang 16286" title="梁神的 Blog">Liang God!</a></li>
+</ul>
+</div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+	<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+	</script>
+    <div id="footer-info" class="inner">
+      &copy; 2016 人海中一只羊<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+	<span id="busuanzi_container_site_pv">
+	    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+	</span>
+	<span id="busuanzi_container_page_pv">
+  		本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+	</span>
+    </div>
+  </div>
+</footer>
+
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

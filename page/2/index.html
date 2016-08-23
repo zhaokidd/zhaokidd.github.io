@@ -68,6 +68,47 @@
       <div class="outer">
         <section id="main">
   
+    l<article id="post-4-14问题记录" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2016/04/14/4-14问题记录/" class="article-date">
+  <time datetime="2016-04-14T12:47:09.000Z" itemprop="datePublished">2016-04-14</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/04/14/4-14问题记录/">4-14问题记录</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="4-14工作及学习记录"><a href="#4-14工作及学习记录" class="headerlink" title="4-14工作及学习记录"></a>4-14工作及学习记录</h3><ul>
+<li><h4 id="今天主要在解一个bug"><a href="#今天主要在解一个bug" class="headerlink" title="今天主要在解一个bug:"></a>今天主要在解一个bug:</h4>在EmptyDialog这个Activity类启动dialog的时候,点击确定按钮后没有弹出新的对话框,原因是前一个dialog还没有小毁掉就启动了相同的Activity.<br>解决方法是在第二次调用EmptyDialog这个Activity的时候利用handler延迟了启动,使得activity销毁后再重新建立.</li>
+</ul>
+<h3 id="问题记录"><a href="#问题记录" class="headerlink" title="问题记录:"></a>问题记录:</h3><h5 id="写了一个shell脚本打算通过adb-push到手机中-通过远程shell一直无法执行这个sh文件-已经获得root权限并且该文件也具有可执行权限-但是执行的时候仍然提示错误-No-Such-File-Or-Directory"><a href="#写了一个shell脚本打算通过adb-push到手机中-通过远程shell一直无法执行这个sh文件-已经获得root权限并且该文件也具有可执行权限-但是执行的时候仍然提示错误-No-Such-File-Or-Directory" class="headerlink" title="写了一个shell脚本打算通过adb push到手机中,通过远程shell一直无法执行这个sh文件.已经获得root权限并且该文件也具有可执行权限,但是执行的时候仍然提示错误 : No Such File Or Directory!"></a>写了一个shell脚本打算通过adb push到手机中,通过远程shell一直无法执行这个sh文件.已经获得root权限并且该文件也具有可执行权限,但是执行的时候仍然提示错误 : No Such File Or Directory!</h5><p>目前还不知道为什么.<br>替代方法是:在sh脚本文件中的shell命令之前加上 adb shell.不登陆远程shell来执行命令.<strong>但是以后可能会有需要将sh文件放入到手机中来执行的情况</strong>,</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/14/4-14问题记录/" data-id="cis7irz1a000808p92pl5i9no" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+  
+
+  
     l<article id="post-EventBus初探" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2016/04/12/EventBus初探/" class="article-date">
@@ -121,7 +162,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/12/EventBus初探/" data-id="cis63x2m80007icp93gfv95p8" class="article-share-link">Share</a>
+      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/12/EventBus初探/" data-id="cis7irz19000708p9pi2xb5o1" class="article-share-link">Share</a>
       
       
     </footer>
@@ -172,7 +213,7 @@ __RemoteCallbackList__
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/07/4-7工作学习记录/" data-id="cis63x2m20003icp9ix6chj58" class="article-share-link">Share</a>
+      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/07/4-7工作学习记录/" data-id="cis7irz12000208p9b1womfmx" class="article-share-link">Share</a>
       
       
     </footer>
@@ -211,7 +252,7 @@ __RemoteCallbackList__
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/06/4-6学习笔记/" data-id="cis63x2m00002icp9qqkqfdl9" class="article-share-link">Share</a>
+      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/06/4-6学习笔记/" data-id="cis7irz1e000908p99zebtlew" class="article-share-link">Share</a>
       
       
     </footer>
@@ -253,7 +294,7 @@ __RemoteCallbackList__
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/05/4-5学习笔记/" data-id="cis63x2md0009icp92siujkkf" class="article-share-link">Share</a>
+      <a data-url="http://blog.zhaoyang.meizu.com/2016/04/05/4-5学习笔记/" data-id="cis7irz1f000a08p9y5wfihgv" class="article-share-link">Share</a>
       
       
     </footer>
@@ -298,6 +339,10 @@ __RemoteCallbackList__
       <ul>
         
           <li>
+            <a href="/2016/08/23/Flyme-设置-应用管理-源码分析/">Flyme-设置-应用管理-源码分析</a>
+          </li>
+        
+          <li>
             <a href="/2016/08/22/Android爬虫-爬取V2ex职位信息/">Android爬虫-爬取V2ex职位信息</a>
           </li>
         
@@ -311,10 +356,6 @@ __RemoteCallbackList__
         
           <li>
             <a href="/2016/07/17/shell脚本删除空目录/">shell脚本删除空目录</a>
-          </li>
-        
-          <li>
-            <a href="/2016/07/06/WeakHanlder分析/">WeakHanlder分析</a>
           </li>
         
       </ul>
