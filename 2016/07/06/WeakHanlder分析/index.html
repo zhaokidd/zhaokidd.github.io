@@ -6,18 +6,21 @@
   <title>WeakHanlder分析 | 赵阳的blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="为什么要使用WeakHandler在使用Handler的时候,通常的写法是1Handler mHandler = new Handler();
-通过handler的sendDelayedMessage()方法可以发送Message或者Runnable.当我们延时发送一条message或者延时执行某个runable的时候,如果在这个时候退出activity,由于消息队列中的每条message都持有h">
+Handler造成内存泄露一般有两种可能的原因.
+1.handler造成的泄露。java中匿名内部类持有对外部类的引用，而handler对象通常会被子线程对象持有，这就会造成子线程 –&amp;gt;handler –&amp;gt;需要回收的activity  这样一条">
 <meta property="og:type" content="article">
 <meta property="og:title" content="WeakHanlder分析">
 <meta property="og:url" content="http://blog.zhaoyang.meizu.com/2016/07/06/WeakHanlder分析/index.html">
 <meta property="og:site_name" content="赵阳的blog">
 <meta property="og:description" content="为什么要使用WeakHandler在使用Handler的时候,通常的写法是1Handler mHandler = new Handler();
-通过handler的sendDelayedMessage()方法可以发送Message或者Runnable.当我们延时发送一条message或者延时执行某个runable的时候,如果在这个时候退出activity,由于消息队列中的每条message都持有h">
-<meta property="og:updated_time" content="2016-07-06T09:14:37.604Z">
+Handler造成内存泄露一般有两种可能的原因.
+1.handler造成的泄露。java中匿名内部类持有对外部类的引用，而handler对象通常会被子线程对象持有，这就会造成子线程 –&amp;gt;handler –&amp;gt;需要回收的activity  这样一条">
+<meta property="og:updated_time" content="2016-09-25T12:10:09.614Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="WeakHanlder分析">
 <meta name="twitter:description" content="为什么要使用WeakHandler在使用Handler的时候,通常的写法是1Handler mHandler = new Handler();
-通过handler的sendDelayedMessage()方法可以发送Message或者Runnable.当我们延时发送一条message或者延时执行某个runable的时候,如果在这个时候退出activity,由于消息队列中的每条message都持有h">
+Handler造成内存泄露一般有两种可能的原因.
+1.handler造成的泄露。java中匿名内部类持有对外部类的引用，而handler对象通常会被子线程对象持有，这就会造成子线程 –&amp;gt;handler –&amp;gt;需要回收的activity  这样一条">
   
     <link rel="alternate" href="/atom.xml" title="赵阳的blog" type="application/atom+xml">
   
@@ -93,9 +96,8 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h3 id="为什么要使用WeakHandler"><a href="#为什么要使用WeakHandler" class="headerlink" title="为什么要使用WeakHandler"></a>为什么要使用WeakHandler</h3><p>在使用Handler的时候,通常的写法是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Handler mHandler = new Handler();</span><br></pre></td></tr></table></figure></p>
-<p>通过handler的<strong>sendDelayedMessage()</strong>方法可以发送Message或者Runnable.当我们延时发送一条message或者延时执行某个runable的时候,如果在这个时候退出activity,由于消息队列中的每条message都持有handler引用而消息队列是与app生命周期相同的全程存在.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public static Message obtain(Handler h) &#123;</span><br><span class="line">        Message m = obtain();</span><br><span class="line">        m.target = h;</span><br><span class="line"></span><br><span class="line">        return m;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
-<p>会导致handler无法释放。<br>而从java的角度来考虑,因为所有的非静态内部类和匿名内部类都会持有对外部类的引用,所以非静态的handler自然会持有对外部对象activity的引用.<br>这样就会导致在message延时的时间内activity的资源无法被回收,从而造成内存泄露.</p>
-<h3 id="WeakHandler的组成和分析"><a href="#WeakHandler的组成和分析" class="headerlink" title="WeakHandler的组成和分析"></a>WeakHandler的组成和分析</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> Handler.Callback mCallback; <span class="comment">// hard reference to Callback. We need to keep callback in memory</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> ExecHandler mExec;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> ChainedRef mRunnables = <span class="keyword">new</span> ChainedRef(<span class="keyword">null</span>);</span><br></pre></td></tr></table></figure>
+<p>Handler造成内存泄露一般有两种可能的原因.</p>
+<h6 id="1-handler造成的泄露。java中匿名内部类持有对外部类的引用，而handler对象通常会被子线程对象持有，这就会造成子线程-–-gt-handler-–-gt-需要回收的activity-这样一条引用链。"><a href="#1-handler造成的泄露。java中匿名内部类持有对外部类的引用，而handler对象通常会被子线程对象持有，这就会造成子线程-–-gt-handler-–-gt-需要回收的activity-这样一条引用链。" class="headerlink" title="1.handler造成的泄露。java中匿名内部类持有对外部类的引用，而handler对象通常会被子线程对象持有，这就会造成子线程 –&gt;handler –&gt;需要回收的activity  这样一条引用链。"></a>1.handler造成的泄露。java中匿名内部类持有对外部类的引用，而handler对象通常会被子线程对象持有，这就会造成子线程 –&gt;handler –&gt;需要回收的activity  这样一条引用链。</h6><h6 id="2-runnable对象造成的内存泄露-因为一个匿名的runnable对象同样会持有外部activity的引用。这种情况下的引用链条是这样的-Message-–-gt-Runnable-–-gt-需要释放的activity"><a href="#2-runnable对象造成的内存泄露-因为一个匿名的runnable对象同样会持有外部activity的引用。这种情况下的引用链条是这样的-Message-–-gt-Runnable-–-gt-需要释放的activity" class="headerlink" title="2.runnable对象造成的内存泄露,因为一个匿名的runnable对象同样会持有外部activity的引用。这种情况下的引用链条是这样的 Message –&gt; Runnable –&gt; 需要释放的activity."></a>2.runnable对象造成的内存泄露,因为一个匿名的runnable对象同样会持有外部activity的引用。这种情况下的引用链条是这样的 Message –&gt; Runnable –&gt; 需要释放的activity.</h6><h3 id="WeakHandler的组成和分析"><a href="#WeakHandler的组成和分析" class="headerlink" title="WeakHandler的组成和分析"></a>WeakHandler的组成和分析</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> Handler.Callback mCallback; <span class="comment">// hard reference to Callback. We need to keep callback in memory</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> ExecHandler mExec;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> ChainedRef mRunnables = <span class="keyword">new</span> ChainedRef(<span class="keyword">null</span>);</span><br></pre></td></tr></table></figure>
 <p>weakhandler中包含三个对象,Handler内的<strong>Callback</strong>对象,一个<strong>ExecHandler</strong>对象,还有一个存储runnables对象的<strong>mRunnables</strong>.</p>
 <h4 id="ExecHandler"><a href="#ExecHandler" class="headerlink" title="ExecHandler"></a>ExecHandler</h4><p>callback回调函数会传入exechandler中,exechandler负责callback的执行<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(Message msg)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (mCallback == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">final</span> Handler.Callback callback = mCallback.get();</span><br><span class="line">        <span class="keyword">if</span> (callback == <span class="keyword">null</span>) &#123; <span class="comment">// Already disposed</span></span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        callback.handleMessage(msg);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <h4 id="mRunnables"><a href="#mRunnables" class="headerlink" title="mRunnables"></a>mRunnables</h4><p>Handler之所以会西楼</p>
@@ -103,7 +105,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://blog.zhaoyang.meizu.com/2016/07/06/WeakHanlder分析/" data-id="cis7irz1o000c08p9n3vp4pvb" class="article-share-link">Share</a>
+      <a data-url="http://blog.zhaoyang.meizu.com/2016/07/06/WeakHanlder分析/" data-id="civ4uz6kn000gkhp972uoh2nd" class="article-share-link">Share</a>
       
       
     </footer>
@@ -168,7 +170,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a></li></ul>
     </div>
   </div>
 
@@ -181,6 +183,14 @@
       <ul>
         
           <li>
+            <a href="/2016/09/03/View绘制流程分析/">View绘制流程分析</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/27/Dialog启动流程分析/">Dialog启动流程分析</a>
+          </li>
+        
+          <li>
             <a href="/2016/08/23/Flyme-设置-应用管理-源码分析/">Flyme-设置-应用管理-源码分析</a>
           </li>
         
@@ -190,14 +200,6 @@
         
           <li>
             <a href="/2016/08/19/AsyncTask的一些分析/">AsyncTask的一些分析</a>
-          </li>
-        
-          <li>
-            <a href="/2016/07/27/MzUpdate-DownloadCommon库分析/">MzUpdate-DownloadCommon库分析</a>
-          </li>
-        
-          <li>
-            <a href="/2016/07/17/shell脚本删除空目录/">shell脚本删除空目录</a>
           </li>
         
       </ul>
